@@ -1,4 +1,4 @@
-name: "server-build-workflow"
+name: "app-build-workflow"
 on:
   push:
     branches:
