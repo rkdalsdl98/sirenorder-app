@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 
-class RoundedButtonSmall extends StatelessWidget {
+class RoundedButtonMedium extends StatelessWidget {
   final String text;
   final Color backgroundColor;
   final Color textColor;
   final EdgeInsetsGeometry padding;
   void Function()? onTab;
 
-  RoundedButtonSmall({
+  RoundedButtonMedium({
     super.key,
     required this.text,
     this.backgroundColor = const Color(0xFF1CBA3E),
@@ -33,7 +33,7 @@ class RoundedButtonSmall extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyles.defaultStyle.copyWith(
             color: textColor,
-            fontSize: 8,
+            fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
         ),

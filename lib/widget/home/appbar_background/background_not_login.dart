@@ -33,7 +33,7 @@ class BackgrounNotLogin extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const RoundedButtonSmall(text: "회원가입"),
+                  RoundedButtonSmall(text: "회원가입"),
                   RoundedButtonSmall(
                     text: "로그인",
                     backgroundColor: Theme.of(context).colorScheme.background,

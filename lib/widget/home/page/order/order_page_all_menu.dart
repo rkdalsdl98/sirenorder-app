@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
+import 'package:sirenorder_app/widget/home/page/order/menu_item.dart';
 import 'package:sirenorder_app/widget/home/page/order/order_category.tabs.dart';
 
 class OrderAllMenu extends StatefulWidget {
@@ -27,13 +28,49 @@ class _OrderAllMenuState extends State<OrderAllMenu> {
             currIndex: currIndex,
             onChangeTab: onChangeTab,
           ),
-          const SingleChildScrollView(
-            child: Column(
-              children: [],
+          Expanded(
+            child: SingleChildScrollView(
+              child: IndexedStack(
+                index: currIndex,
+                children: [
+                  drinkListhelper(),
+                  foodListhelper(),
+                  productListhelper(),
+                ],
+              ),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+Widget drinkListhelper() {
+  return const Padding(
+    padding: EdgeInsets.only(top: 10),
+    child: Column(
+      children: [
+        MenuItem(),
+      ],
+    ),
+  );
+}
+
+Widget foodListhelper() {
+  return const Padding(
+    padding: EdgeInsets.only(top: 10),
+    child: Column(
+      children: [],
+    ),
+  );
+}
+
+Widget productListhelper() {
+  return const Padding(
+    padding: EdgeInsets.only(top: 10),
+    child: Column(
+      children: [],
+    ),
+  );
 }

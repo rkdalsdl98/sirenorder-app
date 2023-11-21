@@ -20,11 +20,13 @@ class OrderCategoryTabs extends StatelessWidget {
       height: 30 * getScaleHeight(context),
       child: Row(
         children: ["음료", "음식", "상품"].map<OrderCategoryTab>((text) {
+          final int index = categoryCount;
           ++categoryCount;
           return OrderCategoryTab(
             text: text,
-            selCategory: (categoryCount - 1) == currIndex,
+            selCategory: index == currIndex,
             onChangeTab: onChangeTab,
+            index: index,
           );
         }).toList(),
       ),

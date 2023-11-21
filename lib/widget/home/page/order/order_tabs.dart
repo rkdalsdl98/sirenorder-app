@@ -31,12 +31,13 @@ class OrderTabs extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: ["전체메뉴", "나만의 메뉴"].map<OrderTab>(
           (text) {
+            final int index = tabCount;
             ++tabCount;
             return OrderTab(
               text: text,
-              selTab: (tabCount - 1) == currIndex,
+              selTab: index == currIndex,
               onChangeTab: onChangeTab,
-              tabIndex: tabCount - 1,
+              tabIndex: index,
             );
           },
         ).toList(),
