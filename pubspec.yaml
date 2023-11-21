@@ -77,8 +77,8 @@ flutter:
 
   assets: 
     - assets/img/
-    - .env
     - assets/rive/
+    - .env
 
   fonts:
   - family: SpoqaHanSans
