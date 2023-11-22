@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sirenorder_app/view/home.dart';
+import 'package:sirenorder_app/view/login.dart';
 
 Route<dynamic>? initGeneratedRoutes(
   RouteSettings settings,
@@ -11,6 +12,9 @@ Route<dynamic>? initGeneratedRoutes(
   switch (settings.name) {
     case '/':
       return MaterialPageRoute(builder: (_) => const Home());
+    case '/login':
+      return MaterialPageRoute(
+          builder: (_) => Login(initialPage: args["page"]));
     default:
       return null;
   }
