@@ -6,12 +6,14 @@ class InputForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final Map<String, dynamic> fields;
   final void Function(String key, dynamic data) onUpdateResult;
+  bool readOnly;
 
-  const InputForm({
+  InputForm({
     super.key,
     required this.formKey,
     required this.fields,
     required this.onUpdateResult,
+    this.readOnly = false,
   });
 
   @override
@@ -24,13 +26,15 @@ class InputForm extends StatelessWidget {
           children: fields.keys.map((key) {
             final field = (fields[key] ?? {}) as Map<String, dynamic>;
             return TextFormField(
+              autocorrect: false,
+              readOnly: readOnly,
               onSaved: (value) {
                 onUpdateResult(key, value);
               },
               validator: (value) => Validation.match(field['type'], value),
               obscureText: field['obscure'] ?? false,
               decoration: InputDecoration(
-                hintText: field['hint'],
+                hintText: field['hint'] ?? "",
                 hintStyle: TextStyles.defaultStyle.copyWith(
                   fontSize: 12,
                   color: Theme.of(context)

@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/regist/event/clear_event.dart';
+import 'package:sirenorder_app/bloc/regist/regist_bloc.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/type/check_state.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_small.dart';
 import 'package:sirenorder_app/widget/login/page/regist/double_check_box.dart';
 import 'package:sirenorder_app/widget/login/page/regist/one_check_box.dart';
+import 'package:sirenorder_app/widget/login/page/regist/step_header.dart';
 
 class StepOne extends StatefulWidget {
   final void Function(int index) onChangePage;
+  final void Function(int index) onChangeStep;
 
   const StepOne({
     super.key,
     required this.onChangePage,
+    required this.onChangeStep,
   });
 
   @override
@@ -26,6 +32,7 @@ class _StepOneState extends State<StepOne> {
     3: DoubleCheckState("광고성 정보 수신동의(모두 선택)"),
   };
   bool allCheck = false;
+  bool allDoubleCheck = false;
 
   void allChangeState(bool value, int? key) {
     setState(() {
@@ -45,6 +52,10 @@ class _StepOneState extends State<StepOne> {
 
   void changeOneCheckState(bool value, int key) {
     setState(() {
+      if (allCheck) {
+        (checks[0] as OneCheckState).setCheckState(false);
+        allCheck = false;
+      }
       (checks[key] as OneCheckState).setCheckState(value);
     });
   }
@@ -57,8 +68,30 @@ class _StepOneState extends State<StepOne> {
 
   void changeAllDoubleCheckState(bool value, int key) {
     setState(() {
+      allDoubleCheck = value;
       (checks[key] as DoubleCheckState).setAllCheckState(value);
     });
+  }
+
+  bool _checkRequiedCheck() {
+    bool result = true;
+    for (var key in checks.keys) {
+      if (key == 0) continue;
+      if (checks[key] is OneCheckState) {
+        if (!(checks[key] as OneCheckState).state) {
+          result = false;
+          break;
+        }
+      }
+    }
+
+    return !result;
+  }
+
+  void exit() {
+    final bloc = context.read<RegistBloc>();
+    bloc.add(ClearEvent());
+    widget.onChangePage(0);
   }
 
   @override
@@ -66,61 +99,12 @@ class _StepOneState extends State<StepOne> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InkWell(
-          onTap: () {
-            widget.onChangePage(0);
-          },
-          child: Container(
-            margin: const EdgeInsets.only(top: 35),
-            padding: const EdgeInsets.only(left: 10),
-            width: 25 * getScaleWidth(context),
-            height: 25 * getScaleHeight(context),
-            child: Text(
-              "<",
-              style: TextStyles.defaultStyle.copyWith(
-                fontSize: 22,
-                color:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(.5),
-              ),
-            ),
-          ),
+        StepHeader(
+          onTab: exit,
+          title: "회원가입",
+          subTitle: "사이렌 오더 회원이 아니시군요?",
+          comment: "사이렌 오더 아이디를 생성하시면\n다양한 혜택을 함께 누릴 수 있습니다!",
         ),
-        Container(
-          margin: const EdgeInsets.only(top: 20),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          width: double.maxFinite,
-          height: 145 * getScaleHeight(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "회원가입",
-                style: TextStyles.titleStyle,
-              ),
-              const Spacer(),
-              Text(
-                "사이렌 오더 회원이 아니시군요?",
-                style: TextStyles.titleStyle.copyWith(
-                  fontSize: 18,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Text(
-                  "사이렌 오더 아이디를 생성하시면\n다양한 혜택을 함께 누릴 수 있습니다!",
-                  style: TextStyles.defaultStyle.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w300,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-              const Spacer(),
-            ],
-          ),
-        ),
-        SizedBox(height: 40 * getScaleHeight(context)),
         SizedBox(
           width: double.maxFinite,
           height: 300 * getScaleHeight(context),
@@ -137,6 +121,7 @@ class _StepOneState extends State<StepOne> {
                 } else {
                   return DoubleCheckBox(
                     index: key,
+                    currAllState: allDoubleCheck,
                     state: checks[key] as DoubleCheckState,
                     onChangeState: changeDoubleCheckState,
                     onChangeAllState: changeAllDoubleCheckState,
@@ -151,9 +136,14 @@ class _StepOneState extends State<StepOne> {
           width: double.maxFinite,
           height: 60 * getScaleHeight(context),
           child: RoundedButtonSmall(
+            disabled: _checkRequiedCheck(),
             text: "다음",
             fontSize: 14,
-            onTab: () {},
+            onTab: () {
+              allChangeState(false, null);
+              changeAllDoubleCheckState(false, checks.length - 1);
+              widget.onChangeStep(1);
+            },
           ),
         )
       ],

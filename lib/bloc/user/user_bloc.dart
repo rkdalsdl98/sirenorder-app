@@ -5,5 +5,5 @@ import 'package:sirenorder_app/respository/user_repository.dart';
 
 class UserBloc extends Bloc<UserEvent, UserBlocState> {
   final UserRepository _repository;
-  UserBloc(this._repository) : super(UserBlocInitState());
+  UserBloc(this._repository) : super(UserBlocInitState(null));
 }

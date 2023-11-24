@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/regist/event/publish_code_event.dart';
+import 'package:sirenorder_app/bloc/regist/regist_bloc.dart';
+import 'package:sirenorder_app/datasource/api_manager.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/widget/common/input_form.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_small.dart';
 import 'package:sirenorder_app/common/validation.dart';
 import 'package:sirenorder_app/widget/login/page/regist/finders.dart';
+
+import '../../../system/system_message.dart';
 
 class LoginPage extends StatelessWidget {
   final void Function(int index) onChangePage;
@@ -22,20 +28,18 @@ class LoginPage extends StatelessWidget {
 
     final form = _formKey.currentState;
     if (form == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("알 수 없는 오류가 발생했습니다.\n앱을 재실행해 주세요."),
-        ),
+      showSnackBarMessage(
+        context,
+        "알 수 없는 오류가 발생했습니다.\n앱을 재실행해 주세요.",
       );
       return;
     }
 
     final bool validate = form.validate();
     if (!validate) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("입력하신 정보를 한번 더 확인해주세요."),
-        ),
+      showSnackBarMessage(
+        context,
+        "입력하신 정보를 한번 더 확인해주세요.",
       );
       return;
     }

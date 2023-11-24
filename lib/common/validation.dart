@@ -12,6 +12,9 @@ Map<ValidateType, List<RegExp>> regsMap = {
     RegExp(r"[0-9a-zA-Z]{6,20}"),
     RegExp(r"[\!\`\~\@\#\$\%\^\&\*\_\+\=\/\>\<\?]{1,}"),
   ],
+  ValidateType.nickname: [
+    RegExp(r"[0-9a-zA-Zㄱ-ㅎ가-힣]{2,6}"),
+  ],
 };
 
 String _getIdentifier(String str) {

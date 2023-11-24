@@ -7,6 +7,8 @@ class RoundedButtonSmall extends StatelessWidget {
   final Color textColor;
   final EdgeInsetsGeometry padding;
   void Function()? onTab;
+  bool disabled;
+  bool isLoading;
   double? fontSize;
 
   RoundedButtonSmall({
@@ -17,18 +19,26 @@ class RoundedButtonSmall extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
     this.onTab,
     this.fontSize,
+    this.disabled = false,
+    this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTab,
+      onTap: isLoading ? null : (disabled ? null : onTab),
       child: Container(
         padding: padding,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(180),
-          border: Border.all(color: textColor),
-          color: backgroundColor,
+          border: Border.all(
+            color: isLoading
+                ? Colors.grey
+                : (disabled ? const Color(0xFFD9D9D9) : textColor),
+          ),
+          color: isLoading
+              ? Colors.black12
+              : (disabled ? const Color(0xFFD9D9D9) : backgroundColor),
         ),
         child: Align(
           alignment: Alignment.center,
@@ -36,7 +46,9 @@ class RoundedButtonSmall extends StatelessWidget {
             text,
             textAlign: TextAlign.center,
             style: TextStyles.defaultStyle.copyWith(
-              color: textColor,
+              color: isLoading
+                  ? Colors.grey
+                  : (disabled ? const Color(0xFFFEFBFF) : textColor),
               fontSize: fontSize ?? 8,
               fontWeight: FontWeight.w500,
             ),

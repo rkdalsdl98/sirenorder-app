@@ -9,13 +9,15 @@ class DoubleCheckBox extends StatefulWidget {
   final void Function(bool value, int key, DoubleCheckOrder order)
       onChangeState;
   final void Function(bool value, int key) onChangeAllState;
+  bool currAllState;
 
-  const DoubleCheckBox({
+  DoubleCheckBox({
     super.key,
     required this.state,
     required this.index,
     required this.onChangeState,
     required this.onChangeAllState,
+    this.currAllState = false,
   });
 
   @override
@@ -23,8 +25,6 @@ class DoubleCheckBox extends StatefulWidget {
 }
 
 class _DoubleCheckBoxState extends State<DoubleCheckBox> {
-  bool allState = false;
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -35,7 +35,7 @@ class _DoubleCheckBoxState extends State<DoubleCheckBox> {
           Row(
             children: [
               Checkbox(
-                value: allState,
+                value: widget.currAllState,
                 activeColor: const Color(0xFF1CBA3E),
                 shape: const CircleBorder(),
                 side: BorderSide(
@@ -43,7 +43,7 @@ class _DoubleCheckBoxState extends State<DoubleCheckBox> {
                 ),
                 onChanged: (value) {
                   if (value != null) {
-                    allState = value;
+                    widget.currAllState = value;
                     widget.onChangeAllState(value, widget.index);
                   }
                 },

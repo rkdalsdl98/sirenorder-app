@@ -15,6 +15,9 @@ enum ExceptionType {
   NotFoundException,
   NotFoundDataException,
   RepsitoryLoadException,
+  RepsitoryNotDefinedException,
   APIException,
   StateException,
+  UnSuitedEventException,
+  ServiceUnavailableException,
 }
