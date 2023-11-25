@@ -9,6 +9,20 @@ class LocalManager {
     SharedPreferences.getInstance().then((storage) => _storage = storage);
   }
 
+  Map<String, dynamic>? getJsonData(String key) {
+    if (_storage == null) {
+      throw BlocException(
+        "로컬 저장소 초기화에 실패했습니다.",
+        ExceptionType.RepsitoryLoadException,
+      );
+    }
+    final data = _storage!.getString(key);
+    if (data == null) {
+      return null;
+    }
+    return jsonDecode(data);
+  }
+
   Future<bool> saveDataFromJson(String key, Map<String, dynamic> json) async {
     if (_storage == null) {
       throw BlocException(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/regist/regist_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/view/home.dart';
 import 'package:sirenorder_app/view/login.dart';
@@ -19,7 +20,10 @@ Route<dynamic>? initGeneratedRoutes(
       return MaterialPageRoute(
         builder: (routeContext) => RepositoryProvider.value(
           value: routeContext.read<UserRepository>(),
-          child: Login(initialPage: args["page"]),
+          child: BlocProvider.value(
+            value: routeContext.read<UserBloc>(),
+            child: Login(initialPage: args["page"]),
+          ),
         ),
       );
     default:

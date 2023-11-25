@@ -12,21 +12,28 @@ class UserBlocInitState extends UserBlocState {
   UserBlocInitState(super.user);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [user];
 }
 
 class UserBlocLoadingState extends UserBlocState {
   UserBlocLoadingState(super.user);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [user];
+}
+
+class UserBlocLoginedState extends UserBlocState {
+  UserBlocLoginedState(super.user);
+
+  @override
+  List<Object?> get props => [user];
 }
 
 class UserBlocLoadedState extends UserBlocState {
   UserBlocLoadedState(super.user);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [user];
 }
 
 class UserBlocErrorState extends UserBlocState {
@@ -34,5 +41,5 @@ class UserBlocErrorState extends UserBlocState {
   UserBlocErrorState(super.user, this.exception);
 
   @override
-  List<Object?> get props => [exception];
+  List<Object?> get props => [user, exception];
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/regist/regist_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/widget/login/page/login_page.dart';
 import 'package:sirenorder_app/widget/login/page/regist_page.dart';
@@ -38,7 +40,12 @@ class _LoginState extends State<Login> {
           body: IndexedStack(
             index: currIndex,
             children: [
-              LoginPage(onChangePage: onChangePage),
+              BlocBuilder<UserBloc, UserBlocState>(builder: (_, state) {
+                return LoginPage(
+                  onChangePage: onChangePage,
+                  state: state,
+                );
+              }),
               RegistPage(onChangePage: onChangePage),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 final base = dotenv.env['BASE_URL'];
 
 enum RequestRoute {
+  tokenlogin,
   login,
   order,
   coupon,
@@ -13,6 +14,7 @@ enum RequestRoute {
 }
 
 const Map<RequestRoute, String> routes = {
+  RequestRoute.tokenlogin: "/user/login/token",
   RequestRoute.login: "/user/login",
   RequestRoute.coupon: "/user/coupon",
   RequestRoute.regist: "/user/regist",
@@ -46,6 +48,7 @@ Future<Response> fetchPost(
   RequestRoute route, {
   Map<String, dynamic>? body,
   Map<String, dynamic>? queryParams,
+  Map<String, dynamic>? headers,
 }) async {
   final url = "$base${routes[route]}";
   final BaseOptions options = BaseOptions(
@@ -56,6 +59,7 @@ Future<Response> fetchPost(
     maxRedirects: 0,
     headers: {
       "Content-Type": "application/json;charset=UTF=8",
+      ...?headers,
     },
     queryParameters: queryParams,
   );

@@ -16,26 +16,30 @@ class RegistPage extends StatefulWidget {
 
 class _RegistPageState extends State<RegistPage> {
   int step = 0;
-  bool isLoading = false;
   void changeStep(int index) => setState(() {
         step = index;
       });
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: IndexedStack(
-        index: step,
-        children: [
-          StepOne(
-            onChangePage: widget.onChangePage,
-            onChangeStep: changeStep,
-          ),
-          StepTwo(
-            onChangePage: widget.onChangePage,
-            onChangeStep: changeStep,
-          ),
-        ],
+    return InkWell(
+      radius: 0,
+      highlightColor: Theme.of(context).colorScheme.background,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SingleChildScrollView(
+        child: IndexedStack(
+          index: step,
+          children: [
+            StepOne(
+              onChangePage: widget.onChangePage,
+              onChangeStep: changeStep,
+            ),
+            StepTwo(
+              onChangePage: widget.onChangePage,
+              onChangeStep: changeStep,
+            ),
+          ],
+        ),
       ),
     );
   }

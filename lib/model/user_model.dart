@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
-  String? nickname, accesstoken;
-  List<String>? coupons;
+  String? nickname, accesstoken, createdAt, updatedAt;
+  List<dynamic>? coupons;
   Wallet? wallet;
   List<Gift>? gifts;
   List<OrderHistory>? orderhistory;
@@ -10,25 +10,25 @@ class UserModel extends Equatable {
   UserModel.fromJson(Map<String, dynamic> json) {
     nickname = json['nickname'];
     accesstoken = json['accesstoken'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
     coupons = json['coupons'] ?? [];
 
-    if (json['wallet']) {
+    if (json['wallet'] != null) {
       wallet = Wallet.fromJson(json['wallet']);
     }
 
     gifts = [];
-    if (json['gifts'] != null &&
-        (json['gifts'] as List<Map<String, dynamic>>).isNotEmpty) {
-      for (var gift in (json['gifts'] as List<Map<String, dynamic>>)) {
+    if (json['gifts'] != null && (json['gifts'] as List<dynamic>).isNotEmpty) {
+      for (var gift in (json['gifts'] as List<dynamic>)) {
         gifts!.add(Gift.fromJson(gift));
       }
     }
 
     orderhistory = [];
     if (json['orderhistory'] != null &&
-        (json['orderhistory'] as List<Map<String, dynamic>>).isNotEmpty) {
-      for (var history
-          in (json['orderhistory'] as List<Map<String, dynamic>>)) {
+        (json['orderhistory'] as List<dynamic>).isNotEmpty) {
+      for (var history in (json['orderhistory'] as List<dynamic>)) {
         orderhistory!.add(OrderHistory.fromJson(history));
       }
     }
