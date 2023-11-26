@@ -17,7 +17,7 @@ class BackgroundLogin extends StatelessWidget {
         StampContainer(stampSize: stampSize),
         Container(
           margin: const EdgeInsets.only(right: 10, top: 15),
-          width: 150 * getScaleWidth(context),
+          width: 160 * getScaleWidth(context),
           height: 120 * getScaleHeight(context),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,6 +49,7 @@ class BackgroundLogin extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RoundedButtonSmall(
+                      onTab: () {},
                       text: "쿠\n폰\n함",
                       fontSize: 10,
                       backgroundColor: Theme.of(context).colorScheme.background,
@@ -58,6 +59,7 @@ class BackgroundLogin extends StatelessWidget {
                       ),
                     ),
                     RoundedButtonSmall(
+                      onTab: () {},
                       text: "교\n환\n하\n기",
                       fontSize: 10,
                       backgroundColor: Theme.of(context).colorScheme.background,

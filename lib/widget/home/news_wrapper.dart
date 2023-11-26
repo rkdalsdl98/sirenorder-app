@@ -33,11 +33,14 @@ class NewsWrapper extends StatelessWidget {
                   SizedBox(width: 10 * getScaleWidth(context)),
                   FittedBox(
                     fit: BoxFit.cover,
-                    child: Text(
-                      "What’s New?",
-                      style: TextStyles.defaultStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
+                    child: InkWell(
+                      onTap: () => Navigator.pushNamed(context, "/payment"),
+                      child: Text(
+                        "What’s New?",
+                        style: TextStyles.defaultStyle.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
                     ),
                   )

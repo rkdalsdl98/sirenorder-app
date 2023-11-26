@@ -14,14 +14,14 @@ class StampContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 10, top: 15),
-      width: 180 * getScaleWidth(context),
+      width: 170 * getScaleWidth(context),
       height: 120 * getScaleHeight(context),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
                 "내 스탬프",
@@ -29,7 +29,7 @@ class StampContainer extends StatelessWidget {
               ),
               Text(
                 "6개를 모으면 아메리카노 한잔이 무료에요!",
-                style: TextStyles.defaultStyle.copyWith(fontSize: 8),
+                style: TextStyles.defaultStyle.copyWith(fontSize: 6),
               ),
             ],
           ),
