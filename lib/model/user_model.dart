@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
-  String? nickname, accesstoken, createdAt, updatedAt;
+  String? email, tel, nickname, accesstoken, createdAt, updatedAt;
   List<dynamic>? coupons;
   Wallet? wallet;
   List<Gift>? gifts;
@@ -9,6 +9,8 @@ class UserModel extends Equatable {
 
   UserModel.fromJson(Map<String, dynamic> json) {
     nickname = json['nickname'];
+    email = json['email'];
+    tel = json['tel'];
     accesstoken = json['accesstoken'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -35,7 +37,9 @@ class UserModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
+        "email": email,
         "nickname": nickname,
+        "tel": tel,
         "accesstoken": accesstoken,
         "coupons": coupons,
         "wallet": wallet?.toJson(),

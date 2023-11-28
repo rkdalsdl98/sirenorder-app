@@ -65,6 +65,7 @@ class EmailAuthContainer extends StatelessWidget {
                             child: TextField(
                               readOnly: readOnly,
                               controller: _controller,
+                              onSubmitted: (_) {},
                               maxLength: 6,
                               textAlign: TextAlign.center,
                               style: TextStyles.defaultStyle

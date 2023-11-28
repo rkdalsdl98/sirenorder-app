@@ -15,7 +15,6 @@ Route<dynamic>? initGeneratedRoutes(
 
   switch (settings.name) {
     case '/':
-      print(args);
       return MaterialPageRoute(builder: (_) => const Home());
     case '/login':
       return MaterialPageRoute(
@@ -28,7 +27,11 @@ Route<dynamic>? initGeneratedRoutes(
         ),
       );
     case '/payment':
-      return MaterialPageRoute(builder: (_) => const Payment());
+      return MaterialPageRoute(
+        builder: (_) => Payment(
+          args: args['order'],
+        ),
+      );
     default:
       return null;
   }

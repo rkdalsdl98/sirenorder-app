@@ -11,6 +11,7 @@ enum RequestRoute {
   regist,
   publishcode,
   code,
+  menu
 }
 
 const Map<RequestRoute, String> routes = {
@@ -21,11 +22,13 @@ const Map<RequestRoute, String> routes = {
   RequestRoute.publishcode: "/user/regist/publish",
   RequestRoute.code: "/user/regist/verify",
   RequestRoute.order: "/store/order/send",
+  RequestRoute.menu: "/menu",
 };
 
 Future<Response> fetchGet(
   RequestRoute route, {
   Map<String, dynamic>? queryParams,
+  Map<String, dynamic>? headers,
 }) async {
   final url = "$base${routes[route]}";
   final BaseOptions options = BaseOptions(
@@ -36,6 +39,7 @@ Future<Response> fetchGet(
     maxRedirects: 0,
     headers: {
       "Content-Type": "application/json;charset=UTF=8",
+      ...?headers,
     },
     queryParameters: queryParams,
   );

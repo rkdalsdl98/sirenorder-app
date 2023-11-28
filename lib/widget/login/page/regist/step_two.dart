@@ -32,6 +32,7 @@ class StepTwo extends StatefulWidget {
 class _StepTwoState extends State<StepTwo> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Map<String, dynamic> result = {};
+  bool isAlertError = false;
 
   void prev() {
     final form = _formKey.currentState;
@@ -138,9 +139,14 @@ class _StepTwoState extends State<StepTwo> {
         builder: (blocContext, state) {
       final isLoading = (state is RegistBlocLoadingState);
       if (state is RegistBlocErrorState) {
-        print(state.exception.type);
-        showSnackBarMessage(context, state.exception.message);
+        if (!isAlertError) {
+          print(state.exception.type);
+          showSnackBarMessage(context, state.exception.message);
+        }
+      } else if (state is RegistBlocLoadedState) {
+        isAlertError = false;
       } else if (state is RegistBlocCreatedState) {
+        isAlertError = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           done();
         });
