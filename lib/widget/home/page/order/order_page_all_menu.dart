@@ -4,6 +4,7 @@ import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
 import 'package:sirenorder_app/bloc/menu/menu_state.dart';
 import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
+import 'package:sirenorder_app/system/system_message.dart';
 import 'package:sirenorder_app/type/bloc/menu_type.dart';
 import 'package:sirenorder_app/widget/home/page/order/menu_item.dart';
 import 'package:sirenorder_app/widget/home/page/order/order_category.tabs.dart';
@@ -19,6 +20,7 @@ class OrderAllMenu extends StatefulWidget {
 
 class _OrderAllMenuState extends State<OrderAllMenu> {
   int currIndex = 0;
+  bool isLoading = false;
   void onChangeTab(int index) => setState(() {
         currIndex = index;
       });
@@ -51,6 +53,18 @@ class _OrderAllMenuState extends State<OrderAllMenu> {
             onChangeTab: onChangeTab,
           ),
           BlocBuilder<MenuBloc, MenuBlocState>(builder: (_, state) {
+            if (state is MenuBlocLoadingState) {
+              isLoading = true;
+            } else {
+              if (isLoading && state is MenuBlocErrorState) {
+                final exception = state.exception;
+                showSnackBarMessage(
+                  context,
+                  exception.message,
+                );
+              }
+              isLoading = false;
+            }
             final sortedMap = sortMenuList(state.menus);
             return Expanded(
               child: SingleChildScrollView(

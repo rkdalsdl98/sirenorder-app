@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:dio/dio.dart';
 import 'package:sirenorder_app/bloc/menu/event/get_menu_list_event.dart';
 import 'package:sirenorder_app/bloc/menu/event/menu_event.dart';
 import 'package:sirenorder_app/bloc/menu/handler/get_menu_list_event_handler.dart';
@@ -27,15 +28,31 @@ class MenuBloc extends Bloc<MenuEvent, MenuBlocState> {
         repository: _repository,
       );
     } catch (e) {
-      if (e is BlocException) {
-        emit(MenuBlocErrorState(state.menus, e));
-        return;
+      handleException(emit, e);
+    }
+  }
+
+  handleException(emit, error) {
+    if (error is BlocException) {
+      emit(MenuBlocErrorState(state.menus, error));
+      return;
+    } else if (error is DioException) {
+      final dioException = DIOEXCEPTION[error.type];
+      if (dioException != null) {
+        emit(MenuBlocErrorState(
+          state.menus,
+          BlocException(
+            dioException,
+            ExceptionType.APIException,
+          ),
+        ));
       }
+    } else {
       emit(
         MenuBlocErrorState(
           state.menus,
           BlocException(
-            e.toString(),
+            error.toString(),
             ExceptionType.UnknownException,
           ),
         ),

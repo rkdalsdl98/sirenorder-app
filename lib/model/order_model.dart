@@ -28,10 +28,7 @@ class OrderModel {
 
     if (json['menus'] != null) {
       for (var menu in json['menus']) {
-        menus.add(MenuModel.fromJson({
-          ...menu,
-          "count": 0,
-        }));
+        menus.add(MenuModel.fromJson({...menu}));
       }
     }
   }
@@ -72,7 +69,7 @@ class MenuModel {
   late String name, en_name, thumbnail;
   late int price, detailId;
   late MenuCategory category;
-  int count = 0;
+  int count = 1;
 
   MenuModel(
     this.category,

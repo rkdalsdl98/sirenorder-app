@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:dio/dio.dart';
 import 'package:sirenorder_app/bloc/regist/event/clear_event.dart';
 import 'package:sirenorder_app/bloc/regist/event/create_user_event.dart';
 import 'package:sirenorder_app/bloc/regist/event/regist_event.dart';
@@ -58,20 +59,7 @@ class RegistBloc extends Bloc<RegistEvent, RegistBlocState> {
         repository: _repository,
       );
     } catch (e) {
-      if (e is BlocException) {
-        emit(RegistBlocErrorState(state.authEmail, state.pulishCode, e));
-        return;
-      }
-      emit(
-        RegistBlocErrorState(
-          state.authEmail,
-          state.pulishCode,
-          BlocException(
-            e.toString(),
-            ExceptionType.UnknownException,
-          ),
-        ),
-      );
+      handleException(emit, e);
     }
   }
 
@@ -83,20 +71,7 @@ class RegistBloc extends Bloc<RegistEvent, RegistBlocState> {
         state,
       );
     } catch (e) {
-      if (e is BlocException) {
-        emit(RegistBlocErrorState(state.authEmail, state.pulishCode, e));
-        return;
-      }
-      emit(
-        RegistBlocErrorState(
-          state.authEmail,
-          state.pulishCode,
-          BlocException(
-            e.toString(),
-            ExceptionType.UnknownException,
-          ),
-        ),
-      );
+      handleException(emit, e);
     }
   }
 
@@ -108,16 +83,33 @@ class RegistBloc extends Bloc<RegistEvent, RegistBlocState> {
         state,
       );
     } catch (e) {
-      if (e is BlocException) {
-        emit(RegistBlocErrorState(state.authEmail, state.pulishCode, e));
-        return;
+      handleException(emit, e);
+    }
+  }
+
+  handleException(emit, error) {
+    if (error is BlocException) {
+      emit(RegistBlocErrorState(state.authEmail, state.pulishCode, error));
+      return;
+    } else if (error is DioException) {
+      final dioException = DIOEXCEPTION[error.type];
+      if (dioException != null) {
+        emit(RegistBlocErrorState(
+          state.authEmail,
+          state.pulishCode,
+          BlocException(
+            dioException,
+            ExceptionType.APIException,
+          ),
+        ));
       }
+    } else {
       emit(
         RegistBlocErrorState(
           state.authEmail,
           state.pulishCode,
           BlocException(
-            e.toString(),
+            error.toString(),
             ExceptionType.UnknownException,
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:sirenorder_app/bloc/user/common/methods.dart' as NotifyMethods;
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_login_event.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_event_handler.dart';
@@ -29,7 +30,7 @@ class UserLoginEventHandler extends UserEventHandler {
       );
     }
 
-    emit(UserBlocLoadingState(state.user));
+    emit(UserBlocLoadingState(state.user, state.orderState));
     final res = await _sendLoginRequest(event);
     if (res.data['message'] != null) {
       final failed = FailedResponse.fromJson(res.data);
@@ -46,7 +47,7 @@ class UserLoginEventHandler extends UserEventHandler {
 
     final user = UserModel.fromJson(success.data);
     await repository.saveData("token", {"accesstoken": user.accesstoken});
-    emit(UserBlocLoginedState(user));
+    emit(UserBlocLoadedState(user, state.orderState));
   }
 
   LoginType _getLoginType(UserLoginEvent event) {

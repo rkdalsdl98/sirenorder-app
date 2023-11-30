@@ -72,7 +72,7 @@ class LoginPage extends StatelessWidget {
     if (state is UserBlocLoadingState) {
       isLoading = true;
     } else {
-      if (state is UserBlocLoginedState) {
+      if (state is UserBlocLoadedState && state.user != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -80,7 +80,7 @@ class LoginPage extends StatelessWidget {
             (_) => false,
           );
         });
-      } else if (state is UserBlocErrorState) {
+      } else if (state is UserBlocErrorState && isLoading) {
         var err = state as UserBlocErrorState;
         print(err.exception.type);
         showSnackBarMessage(context, err.exception.message);

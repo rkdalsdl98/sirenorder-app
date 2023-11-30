@@ -44,9 +44,8 @@ class HomeAppBarBackground extends StatelessWidget {
               ),
               width: double.maxFinite,
               height: 150 * getScaleHeight(context),
-              child: (state is UserBlocLoginedState)
-                  ? BackgroundLogin()
-                  : const BackgrounNotLogin(),
+              child:
+                  user != null ? BackgroundLogin() : const BackgrounNotLogin(),
             ),
           ],
         );

@@ -15,7 +15,7 @@ Route<dynamic>? initGeneratedRoutes(
 
   switch (settings.name) {
     case '/':
-      return MaterialPageRoute(builder: (_) => const Home());
+      return MaterialPageRoute(builder: (_) => Home(args: args));
     case '/login':
       return MaterialPageRoute(
         builder: (routeContext) => RepositoryProvider.value(
