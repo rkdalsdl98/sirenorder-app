@@ -7,6 +7,7 @@ import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
 import 'package:sirenorder_app/datasource/api_manager.dart';
 import 'package:sirenorder_app/model/response_model.dart';
+import 'package:sirenorder_app/model/user_model.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/type/bloc/bloc_error_type.dart';
 
@@ -65,6 +66,11 @@ class ListenNotifyOrderEventEventHandler extends UserEventHandler {
       );
     }
     final orderState = NotifyMethods.convertNotifyState(success.data);
+    if (orderState == OrderState.finish || orderState == OrderState.refuse) {
+      state.removeListener();
+      bloc.add(AlertNotifyEvent(orderState));
+      return;
+    }
     bloc.add(AlertNotifyEvent(orderState));
   }
 }

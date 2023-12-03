@@ -29,7 +29,6 @@ abstract class UserBlocState extends Equatable {
   removeListener() {
     _timer?.cancel();
     _timer = null;
-    orderState = null;
   }
 }
 

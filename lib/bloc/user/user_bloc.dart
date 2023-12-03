@@ -33,7 +33,7 @@ class UserBloc extends Bloc<UserEvent, UserBlocState> {
       (event, emit) async {
         alertNotify(emit, event);
       },
-      transformer: sequential(),
+      transformer: droppable(),
     );
   }
 

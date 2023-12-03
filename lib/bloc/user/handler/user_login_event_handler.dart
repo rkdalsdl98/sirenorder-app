@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:sirenorder_app/bloc/user/common/methods.dart' as NotifyMethods;
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_login_event.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_event_handler.dart';

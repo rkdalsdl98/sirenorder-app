@@ -2,7 +2,6 @@ import 'package:sirenorder_app/bloc/user/event/alert_notify_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
-import 'package:sirenorder_app/model/user_model.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/type/bloc/bloc_error_type.dart';
 
@@ -20,14 +19,11 @@ class AlertNotifyEventHandler extends UserEventHandler {
         ExceptionType.APIException,
       );
     }
+
     if (state is UserBlocNotifyState) {
-      emit(UserBlocLoadedState(state.user, state.orderState));
+      emit(UserBlocLoadedState(state.user, event.orderState));
     }
 
-    if (event.orderState == OrderState.refuse ||
-        event.orderState == OrderState.finish) {
-      state.removeListener();
-    }
     emit(UserBlocNotifyState(state.user, event.orderState));
   }
 }
