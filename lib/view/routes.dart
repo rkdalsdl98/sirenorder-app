@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
+import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/view/home.dart';
+import 'package:sirenorder_app/view/login.dart';
+import 'package:sirenorder_app/view/payment.dart';
 
 Route<dynamic>? initGeneratedRoutes(
   RouteSettings settings,
@@ -10,7 +15,23 @@ Route<dynamic>? initGeneratedRoutes(
 
   switch (settings.name) {
     case '/':
-      return MaterialPageRoute(builder: (_) => const Home());
+      return MaterialPageRoute(builder: (_) => Home(args: args));
+    case '/login':
+      return MaterialPageRoute(
+        builder: (routeContext) => RepositoryProvider.value(
+          value: routeContext.read<UserRepository>(),
+          child: BlocProvider.value(
+            value: routeContext.read<UserBloc>(),
+            child: Login(initialPage: args["page"]),
+          ),
+        ),
+      );
+    case '/payment':
+      return MaterialPageRoute(
+        builder: (_) => Payment(
+          args: args['order'],
+        ),
+      );
     default:
       return null;
   }

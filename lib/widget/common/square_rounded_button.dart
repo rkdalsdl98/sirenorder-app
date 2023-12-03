@@ -8,6 +8,8 @@ class SquareRoundedButton extends StatelessWidget {
   final double iconSize;
   double height;
   void Function()? onTab;
+  double? fontSize;
+
   SquareRoundedButton({
     super.key,
     required this.text,
@@ -15,6 +17,7 @@ class SquareRoundedButton extends StatelessWidget {
     required this.iconSize,
     this.height = 20,
     this.onTab,
+    this.fontSize,
   });
 
   @override
@@ -45,7 +48,7 @@ class SquareRoundedButton extends StatelessWidget {
           SizedBox(height: 5 * getScaleHeight(context)),
           Text(
             text,
-            style: TextStyles.titleStyle.copyWith(fontSize: 18),
+            style: TextStyles.titleStyle.copyWith(fontSize: fontSize ?? 18),
           ),
         ],
       ),

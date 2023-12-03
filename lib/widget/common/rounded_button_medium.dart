@@ -7,6 +7,7 @@ class RoundedButtonMedium extends StatelessWidget {
   final Color textColor;
   final EdgeInsetsGeometry padding;
   void Function()? onTab;
+  double? fontSize;
 
   RoundedButtonMedium({
     super.key,
@@ -15,6 +16,7 @@ class RoundedButtonMedium extends StatelessWidget {
     this.textColor = const Color(0xFFFEFBFF),
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
     this.onTab,
+    this.fontSize,
   });
 
   @override
@@ -33,7 +35,7 @@ class RoundedButtonMedium extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyles.defaultStyle.copyWith(
             color: textColor,
-            fontSize: 12,
+            fontSize: fontSize ?? 12,
             fontWeight: FontWeight.w500,
           ),
         ),

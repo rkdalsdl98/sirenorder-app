@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
+import 'package:sirenorder_app/bloc/menu/menu_state.dart';
+import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
+import 'package:sirenorder_app/system/system_message.dart';
+import 'package:sirenorder_app/type/bloc/menu_type.dart';
 import 'package:sirenorder_app/widget/home/page/order/menu_item.dart';
 import 'package:sirenorder_app/widget/home/page/order/order_category.tabs.dart';
 
@@ -14,9 +20,27 @@ class OrderAllMenu extends StatefulWidget {
 
 class _OrderAllMenuState extends State<OrderAllMenu> {
   int currIndex = 0;
+  bool isLoading = false;
   void onChangeTab(int index) => setState(() {
         currIndex = index;
       });
+  Map<MenuCategory, List<MenuModel>> sortMenuList(
+    List<MenuModel> list,
+  ) {
+    final Map<MenuCategory, List<MenuModel>> sortedMap = {};
+    for (var item in list) {
+      sortedMap.update(
+        item.category,
+        (prevList) {
+          prevList.add(item);
+          return prevList;
+        },
+        ifAbsent: () => [item],
+      );
+    }
+    return sortedMap;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -28,49 +52,60 @@ class _OrderAllMenuState extends State<OrderAllMenu> {
             currIndex: currIndex,
             onChangeTab: onChangeTab,
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: IndexedStack(
-                index: currIndex,
-                children: [
-                  drinkListhelper(),
-                  foodListhelper(),
-                  productListhelper(),
-                ],
+          BlocBuilder<MenuBloc, MenuBlocState>(builder: (_, state) {
+            if (state is MenuBlocLoadingState) {
+              isLoading = true;
+            } else {
+              if (isLoading && state is MenuBlocErrorState) {
+                final exception = state.exception;
+                showSnackBarMessage(
+                  context,
+                  exception.message,
+                );
+              }
+              isLoading = false;
+            }
+            final sortedMap = sortMenuList(state.menus);
+            return Expanded(
+              child: SingleChildScrollView(
+                child: IndexedStack(
+                  index: currIndex,
+                  children: [
+                    menuListhelper(
+                      context,
+                      sortedMap[MenuCategory.drink] ?? [],
+                    ),
+                    menuListhelper(
+                      context,
+                      sortedMap[MenuCategory.food] ?? [],
+                    ),
+                    menuListhelper(
+                      context,
+                      sortedMap[MenuCategory.product] ?? [],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );
   }
 }
 
-Widget drinkListhelper() {
-  return const Padding(
-    padding: EdgeInsets.only(top: 10),
+Widget menuListhelper(
+  BuildContext context,
+  List<MenuModel> list,
+) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 10),
     child: Column(
-      children: [
-        MenuItem(),
-      ],
-    ),
-  );
-}
-
-Widget foodListhelper() {
-  return const Padding(
-    padding: EdgeInsets.only(top: 10),
-    child: Column(
-      children: [],
-    ),
-  );
-}
-
-Widget productListhelper() {
-  return const Padding(
-    padding: EdgeInsets.only(top: 10),
-    child: Column(
-      children: [],
+      children: list
+          .map<MenuItem>(
+            (item) => MenuItem(menu: item),
+          )
+          .toList(),
     ),
   );
 }

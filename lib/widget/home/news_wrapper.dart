@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/menu/event/get_menu_list_event.dart';
+import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
+import 'package:sirenorder_app/bloc/user/event/listen_notify_order_event.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/system/dimenssion.dart';
+import 'package:sirenorder_app/type/bloc/menu_type.dart';
 import 'package:sirenorder_app/widget/home/home_appbar_background.dart';
 
 class NewsWrapper extends StatelessWidget {
@@ -21,27 +27,34 @@ class NewsWrapper extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: 120 * getScaleWidth(context),
-              child: Row(
-                children: [
-                  Image(
-                    image: const AssetImage("assets/img/email.png"),
-                    width: 30 * getScaleWidth(context),
-                    height: 22.8 * getScaleHeight(context),
-                  ),
-                  SizedBox(width: 10 * getScaleWidth(context)),
-                  FittedBox(
-                    fit: BoxFit.cover,
-                    child: Text(
-                      "What’s New?",
-                      style: TextStyles.defaultStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                      ),
+            InkWell(
+              onTap: () {
+                context
+                    .read<MenuBloc>()
+                    .add(GetMenuListEvent(MenuCategory.drink));
+              },
+              child: SizedBox(
+                width: 120 * getScaleWidth(context),
+                child: Row(
+                  children: [
+                    Image(
+                      image: const AssetImage("assets/img/email.png"),
+                      width: 30 * getScaleWidth(context),
+                      height: 22.8 * getScaleHeight(context),
                     ),
-                  )
-                ],
+                    SizedBox(width: 10 * getScaleWidth(context)),
+                    FittedBox(
+                      fit: BoxFit.cover,
+                      child: Text(
+                        "What’s New?",
+                        style: TextStyles.defaultStyle.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Icon(
