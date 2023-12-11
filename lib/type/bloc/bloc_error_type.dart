@@ -34,4 +34,5 @@ enum ExceptionType {
   UnSuitedEventException,
   ServiceUnavailableException,
   AlreadySubscribeStreamException,
+  InitializeException,
 }

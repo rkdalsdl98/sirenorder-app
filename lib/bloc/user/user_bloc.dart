@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dio/dio.dart';
-import 'package:sirenorder_app/bloc/user/event/alert_notify_event.dart';
+import 'package:sirenorder_app/bloc/user/event/order_notify_event.dart';
 import 'package:sirenorder_app/bloc/user/event/listen_notify_order_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_login_event.dart';
@@ -29,7 +29,7 @@ class UserBloc extends Bloc<UserEvent, UserBlocState> {
       transformer: restartable(),
     );
 
-    on<AlertNotifyEvent>(
+    on<OrderNotifyEvent>(
       (event, emit) async {
         alertNotify(emit, event);
       },
@@ -52,7 +52,7 @@ class UserBloc extends Bloc<UserEvent, UserBlocState> {
 
   alertNotify(emit, UserEvent event) {
     try {
-      AlertNotifyEventHandler().handleEvent(
+      ListenNotifyEventHandler().handleEvent(
         emit,
         event,
         state,

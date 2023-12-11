@@ -19,7 +19,7 @@ class GetMenuListEventHandler extends MenuEventHandler {
     if (event is! GetMenuListEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
-        ExceptionType.UnSuitedEventException,
+        ExceptionType.StateException,
       );
     } else if (repository == null) {
       throw BlocException(

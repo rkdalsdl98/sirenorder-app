@@ -16,7 +16,7 @@ class ClearEventHandler extends RegistEventHandler {
     if (event is! ClearEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
-        ExceptionType.UnSuitedEventException,
+        ExceptionType.StateException,
       );
     }
     emit(RegistBlocInitState(false, false));

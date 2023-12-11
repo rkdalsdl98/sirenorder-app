@@ -1,17 +1,20 @@
+import 'dart:convert';
+
 import 'package:sirenorder_app/type/bloc/menu_type.dart';
+import 'package:sirenorder_app/type/order_state.dart';
 
 class OrderModel {
   late String buyerName, buyerEmail, buyerTel, name;
-  late List<dynamic> menus;
-  late dynamic deliveryInfo;
+  late PaymentCustomData? customData;
+  late final int amount;
 
   OrderModel(
     this.name,
-    this.deliveryInfo,
     this.buyerTel,
     this.buyerEmail,
     this.buyerName,
-    this.menus,
+    this.customData,
+    this.amount,
   );
 
   OrderModel.fromJson(Map<String, dynamic> json) {
@@ -19,27 +22,22 @@ class OrderModel {
     buyerTel = json['buyer_tel'];
     buyerEmail = json['buyer_email'];
     buyerName = json['buyer_name'];
-    deliveryInfo = {};
-    menus = [];
+    amount = json['amount'];
 
-    if (json['deliveryinfo'] != null) {
-      deliveryInfo = DeliveryInfo.fromJson(json['deliveryinfo']);
-    }
-
-    if (json['menus'] != null) {
-      for (var menu in json['menus']) {
-        menus.add(MenuModel.fromJson({...menu}));
-      }
+    if (json['custom_data'] != null) {
+      customData = PaymentCustomData.fromJson(json['custom_data']);
+    } else {
+      customData = null;
     }
   }
 
   Map<String, dynamic> toJson() => {
         "name": name,
-        "deliveryinfo": deliveryInfo,
         "buyer_tel": buyerTel,
         "buyer_email": buyerEmail,
         "buyer_name": buyerName,
-        "menus": menus.map((m) => m.toJson()),
+        "amount": amount,
+        "custom_data": customData?.toJson(),
       };
 }
 

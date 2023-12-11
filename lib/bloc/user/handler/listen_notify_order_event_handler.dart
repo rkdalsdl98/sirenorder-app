@@ -1,5 +1,5 @@
 import 'package:sirenorder_app/bloc/user/common/methods.dart' as NotifyMethods;
-import 'package:sirenorder_app/bloc/user/event/alert_notify_event.dart';
+import 'package:sirenorder_app/bloc/user/event/order_notify_event.dart';
 import 'package:sirenorder_app/bloc/user/event/listen_notify_order_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_event_handler.dart';
@@ -22,15 +22,10 @@ class ListenNotifyOrderEventEventHandler extends UserEventHandler {
     UserRepository? repository,
     UserBloc? bloc,
   }) async {
-    if (event is! ListenNotifyOrderEvent) {
+    if (event is! ListenNotifyOrderEvent || bloc == null) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
-        ExceptionType.APIException,
-      );
-    } else if (bloc == null) {
-      throw BlocException(
-        "오류",
-        ExceptionType.APIException,
+        ExceptionType.StateException,
       );
     }
     state.listenOrderState(
@@ -68,9 +63,9 @@ class ListenNotifyOrderEventEventHandler extends UserEventHandler {
     final orderState = NotifyMethods.convertNotifyState(success.data);
     if (orderState == OrderState.finish || orderState == OrderState.refuse) {
       state.removeListener();
-      bloc.add(AlertNotifyEvent(orderState));
+      bloc.add(OrderNotifyEvent(orderState));
       return;
     }
-    bloc.add(AlertNotifyEvent(orderState));
+    bloc.add(OrderNotifyEvent(orderState));
   }
 }

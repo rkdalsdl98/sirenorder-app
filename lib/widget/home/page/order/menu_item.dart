@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/model/order_model.dart';
+import 'package:sirenorder_app/model/user_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/system/system_message.dart';
+import 'package:sirenorder_app/type/order_state.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_small.dart';
 
 class MenuItem extends StatelessWidget {
@@ -14,7 +16,10 @@ class MenuItem extends StatelessWidget {
     required this.menu,
   });
 
-  void showPaymentPage(BuildContext context) {
+  void onPaying(
+    BuildContext context,
+    OrderType type,
+  ) {
     final bloc = context.read<UserBloc>();
     final user = bloc.state.user;
 
@@ -27,24 +32,68 @@ class MenuItem extends StatelessWidget {
       return;
     }
 
+    switch (type) {
+      case OrderType.order:
+        showPaymentPage(context, user);
+        break;
+      case OrderType.gift:
+        showGiftPage(context);
+        break;
+    }
+  }
+
+  void showGiftPage(BuildContext context) {
+    int amount = 0 + (menu.price * menu.count);
+    String type = "gift";
+
+    Navigator.pushNamed(
+      context,
+      "/gift",
+      arguments: {
+        "menu": menu.toJson(),
+        "amount": amount,
+        "type": type,
+      },
+    );
+    return;
+  }
+
+  void showPaymentPage(
+    BuildContext context,
+    UserModel user,
+  ) {
+    int amount = 0 + (menu.price * menu.count);
+    String type = "order";
+
     final order = OrderModel(
       menu.name,
-      {
-        "memo": "곧 가지러 감",
-        "take": true,
-        "paymenttype": "card",
-      },
       user.tel!,
       user.email!,
       user.nickname!,
-      [menu],
+      PaymentCustomData.fromJson({
+        "type": type,
+        "data": {
+          "storeId": "d2b4192e-a1a9-4e94-9ab4-1047ddaec2ed",
+          "orderInfo": {
+            "deliveryinfo": {
+              "memo": "곧 가지러 감",
+              "take": true,
+              "paymenttype": "card",
+            },
+            "menus": [menu],
+          },
+        },
+      }),
+      amount,
     );
 
-    Navigator.pushNamedAndRemoveUntil(
+    Navigator.pushNamed(
       context,
       "/payment",
-      (route) => false,
-      arguments: {"order": order.toJson()},
+      arguments: {
+        "order": order.toJson(),
+        "type": type,
+      },
     );
     return;
   }
@@ -53,8 +102,9 @@ class MenuItem extends StatelessWidget {
     showDialog(
       context: context,
       builder: (builderContext) => AlertDialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 80),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40),
         content: SizedBox(
+          width: double.maxFinite,
           height: 100 * getScaleHeight(builderContext),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,15 +133,42 @@ class MenuItem extends StatelessWidget {
                     width: 80 * getScaleWidth(builderContext),
                     height: 30 * getScaleHeight(builderContext),
                     child: RoundedButtonSmall(
-                      text: "확인",
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      text: "선물하기",
                       fontSize: 12,
-                      onTab: () => showPaymentPage(builderContext),
+                      onTab: () => onPaying(
+                        builderContext,
+                        OrderType.gift,
+                      ),
                     ),
                   ),
                   SizedBox(
                     width: 80 * getScaleWidth(builderContext),
                     height: 30 * getScaleHeight(builderContext),
                     child: RoundedButtonSmall(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      text: "주문하기",
+                      fontSize: 12,
+                      onTab: () => onPaying(
+                        builderContext,
+                        OrderType.order,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 70 * getScaleWidth(builderContext),
+                    height: 30 * getScaleHeight(builderContext),
+                    child: RoundedButtonSmall(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
                       text: "아니요",
                       fontSize: 12,
                       onTab: () => Navigator.pop(context),

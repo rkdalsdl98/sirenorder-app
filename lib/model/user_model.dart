@@ -4,7 +4,7 @@ class UserModel extends Equatable {
   String? email, tel, nickname, accesstoken, createdAt, updatedAt;
   List<dynamic>? coupons;
   Wallet? wallet;
-  List<Gift>? gifts;
+  List<GiftModel>? gifts;
   List<OrderHistory>? orderhistory;
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -23,7 +23,7 @@ class UserModel extends Equatable {
     gifts = [];
     if (json['gifts'] != null && (json['gifts'] as List<dynamic>).isNotEmpty) {
       for (var gift in (json['gifts'] as List<dynamic>)) {
-        gifts!.add(Gift.fromJson(gift));
+        gifts!.add(GiftModel.fromJson(gift));
       }
     }
 
@@ -66,20 +66,27 @@ class Wallet {
       };
 }
 
-class Gift extends Equatable {
-  String? uuid, coupon, to, from, wrappingtype;
+class GiftModel extends Equatable {
+  String? uuid, to, from, wrappingtype, message;
+  CouponModel? coupon;
 
-  Gift.fromJson(Map<String, dynamic> json)
-      : uuid = json['uuid'],
-        coupon = json['coupon'],
-        to = json['to'],
-        from = json['to'],
-        wrappingtype = json['wrappingtype'];
+  GiftModel.fromJson(Map<String, dynamic> json) {
+    uuid = json['uuid'];
+    to = json['to'];
+    from = json['to'];
+    message = json['message'];
+    wrappingtype = json['wrappingtype'];
+
+    if (json['coupon'] != null) {
+      coupon = CouponModel.fromJson(json['coupon']);
+    }
+  }
   Map<String, dynamic> toJson() => {
         "uuid": uuid,
         "coupon": coupon,
         "to": to,
         "from": from,
+        "message": message,
         "wrappingtype": wrappingtype,
       };
 
@@ -159,6 +166,25 @@ class MenuInfo {
         "tempture": tempture,
         "price": price,
         "count": count,
+      };
+}
+
+class CouponModel {
+  late final String code, menu_name;
+  late final DateTime expirationPeriod;
+  String? thumbnail;
+
+  CouponModel.fromJson(Map<String, dynamic> json)
+      : code = json['code'],
+        menu_name = json['menu_name'],
+        expirationPeriod = DateTime.parse(json['expiration_period']),
+        thumbnail = json['thumbnail'];
+
+  Map<String, dynamic> toJson() => {
+        "code": code,
+        "menu_name": menu_name,
+        "expiration_period": expirationPeriod,
+        "thumbnail": thumbnail,
       };
 }
 

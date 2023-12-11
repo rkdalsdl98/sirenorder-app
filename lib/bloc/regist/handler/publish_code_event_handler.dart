@@ -18,7 +18,7 @@ class PublishCodeEventHandler extends RegistEventHandler {
     if (event is! PublishCodeEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
-        ExceptionType.UnSuitedEventException,
+        ExceptionType.StateException,
       );
     }
 

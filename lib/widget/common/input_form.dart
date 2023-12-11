@@ -4,7 +4,28 @@ import 'package:sirenorder_app/common/validation.dart' as Validation;
 
 class InputForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
+
+  /// [fields]
+  ///
+  /// "Key": {
+  ///
+  /// "hint": String,
+  ///
+  /// "type": ValidateType?, null
+  ///
+  /// "obscure": bool?, false
+  ///
+  /// "max_lines": int?, 1
+  ///
+  /// "max_length": int?, 50
+  ///
+  /// }
   final Map<String, dynamic> fields;
+
+  ///
+  /// [onUpdateResult]
+  ///
+  /// 입력값 저장 구문을 넣어주세요.
   final void Function(String key, dynamic data) onUpdateResult;
   bool readOnly;
 
@@ -31,7 +52,14 @@ class InputForm extends StatelessWidget {
               onSaved: (value) {
                 onUpdateResult(key, value);
               },
-              validator: (value) => Validation.match(field['type'], value),
+              maxLines: field['max_lines'] ?? 1,
+              maxLength: field['max_length'] ?? 50,
+              validator: (value) {
+                if (field['type'] != null) {
+                  return Validation.match(field['type'], value);
+                }
+                return null;
+              },
               obscureText: field['obscure'] ?? false,
               decoration: InputDecoration(
                 hintText: field['hint'] ?? "",
@@ -43,6 +71,7 @@ class InputForm extends StatelessWidget {
                       .withOpacity(.8),
                   fontWeight: FontWeight.w300,
                 ),
+                counterText: "",
               ),
             );
           }).toList(),

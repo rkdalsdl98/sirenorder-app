@@ -13,6 +13,7 @@ enum RequestRoute {
   code,
   menu,
   orderstate,
+  notify,
 }
 
 const Map<RequestRoute, String> routes = {
@@ -25,6 +26,7 @@ const Map<RequestRoute, String> routes = {
   RequestRoute.order: "/store/order/send",
   RequestRoute.menu: "/menu",
   RequestRoute.orderstate: "/store/order/state",
+  RequestRoute.notify: "/sse/push",
 };
 
 Future<Response> fetchGet(
@@ -72,4 +74,28 @@ Future<Response> fetchPost(
 
   final Dio dio = Dio(options);
   return await dio.post(url, data: body);
+}
+
+Future<Response<ResponseBody>> sse({
+  Map<String, dynamic>? queryParams,
+  Map<String, dynamic>? headers,
+}) async {
+  final url = "$base/sse/listen";
+  final BaseOptions options = BaseOptions(
+    baseUrl: url,
+    connectTimeout: const Duration(seconds: 60),
+    sendTimeout: const Duration(seconds: 120),
+    receiveTimeout: const Duration(seconds: 120),
+    maxRedirects: 0,
+    headers: {
+      "Accept": "text/event-stream",
+      "Cache-Control": "no-cache",
+      ...?headers,
+    },
+    responseType: ResponseType.stream,
+    queryParameters: queryParams,
+  );
+
+  final Dio dio = Dio(options);
+  return await dio.get<ResponseBody>(url);
 }

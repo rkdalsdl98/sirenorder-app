@@ -18,7 +18,7 @@ class CreateUserEventHandler extends RegistEventHandler {
     if (event is! CreateUserEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
-        ExceptionType.UnSuitedEventException,
+        ExceptionType.StateException,
       );
     }
     emit(RegistBlocLoadingState(state.authEmail, state.pulishCode));

@@ -19,7 +19,7 @@ class SendCodeEventHandler extends RegistEventHandler {
     if (event is! SendCodeEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
-        ExceptionType.UnSuitedEventException,
+        ExceptionType.StateException,
       );
     }
 

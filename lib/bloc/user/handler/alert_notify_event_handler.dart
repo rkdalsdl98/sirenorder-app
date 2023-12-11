@@ -1,11 +1,11 @@
-import 'package:sirenorder_app/bloc/user/event/alert_notify_event.dart';
+import 'package:sirenorder_app/bloc/user/event/order_notify_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/type/bloc/bloc_error_type.dart';
 
-class AlertNotifyEventHandler extends UserEventHandler {
+class ListenNotifyEventHandler extends UserEventHandler {
   @override
   handleEvent(
     emit,
@@ -13,10 +13,10 @@ class AlertNotifyEventHandler extends UserEventHandler {
     UserBlocState state, {
     UserRepository? repository,
   }) {
-    if (event is! AlertNotifyEvent) {
+    if (event is! OrderNotifyEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
-        ExceptionType.APIException,
+        ExceptionType.StateException,
       );
     }
 

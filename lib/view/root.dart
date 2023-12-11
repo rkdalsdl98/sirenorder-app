@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
+import 'package:sirenorder_app/bloc/notification/notification_bloc.dart';
 import 'package:sirenorder_app/bloc/regist/regist_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/datasource/local_manager.dart';
@@ -33,6 +34,7 @@ class App extends StatelessWidget {
           BlocProvider(
               create: (blocContext) =>
                   MenuBloc(blocContext.read<MenuRepository>())),
+          BlocProvider(create: (blocContext) => NotificationBloc()),
         ],
         child: MaterialApp(
           title: "SirenOrder",

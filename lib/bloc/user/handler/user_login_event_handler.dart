@@ -25,7 +25,7 @@ class UserLoginEventHandler extends UserEventHandler {
     } else if (event is! UserLoginEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
-        ExceptionType.APIException,
+        ExceptionType.StateException,
       );
     }
 
@@ -77,8 +77,10 @@ class UserLoginEventHandler extends UserEventHandler {
 
     switch (type) {
       case LoginType.tokenlogin:
-        return await fetchPost(route,
-            headers: {"authorization": event.tokenLogin});
+        return await fetchPost(
+          route,
+          headers: {"authorization": event.tokenLogin},
+        );
       case LoginType.typinglogin:
         return await fetchPost(route, queryParams: {
           "email": event.typingLogin!.email,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/notification/event/listen_notifications_event.dart';
+import 'package:sirenorder_app/bloc/notification/notification_bloc.dart';
 import 'package:sirenorder_app/bloc/user/event/user_login_event.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
@@ -74,6 +76,8 @@ class LoginPage extends StatelessWidget {
     } else {
       if (state is UserBlocLoadedState && state.user != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          final notifyBloc = context.read<NotificationBloc>();
+          notifyBloc.add(ListenNotificationsEvent(state.user!.email!));
           Navigator.pushNamedAndRemoveUntil(
             context,
             "/",

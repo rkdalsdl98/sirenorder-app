@@ -4,15 +4,10 @@ import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/system/dimenssion.dart';
+import 'package:sirenorder_app/system/methods.dart';
 
 class PayPage extends StatelessWidget {
   const PayPage({super.key});
-
-  String addComma(int number) {
-    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-    mathFunc(Match match) => '${match[1]},';
-    return "$number".replaceAllMapped(reg, mathFunc);
-  }
 
   Widget showUserPoint(String point) {
     return RichText(
