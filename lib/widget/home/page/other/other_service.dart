@@ -43,11 +43,23 @@ class OtherService extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RoundedButtonMedium(text: "회원가입"),
+                    RoundedButtonMedium(
+                      text: "회원가입",
+                      onTab: () => Navigator.pushNamed(
+                        context,
+                        "/login",
+                        arguments: {"page": 1},
+                      ),
+                    ),
                     RoundedButtonMedium(
                       text: "로그인",
                       backgroundColor: Theme.of(context).colorScheme.background,
                       textColor: const Color(0xFF1CBA3E),
+                      onTab: () => Navigator.pushNamed(
+                        context,
+                        "/login",
+                        arguments: {"page": 0},
+                      ),
                     ),
                   ],
                 ),

@@ -20,14 +20,14 @@ class SSENotifyEventHandler extends NotificationEventHandler {
 
     if (state is! NotificationBlocListeningState) {
       emit(NotificationBlocListeningState(
-        state.subscription,
+        state.listener,
         state.subject,
       ));
     }
 
     await Future.delayed(const Duration(milliseconds: 100)).then((_) {
       emit(NotificationBlocReceiveState(
-        state.subscription,
+        state.listener,
         event.subject,
       ));
     });

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/menu/event/get_menu_list_event.dart';
 import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
-import 'package:sirenorder_app/bloc/user/event/listen_notify_order_event.dart';
-import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/type/bloc/menu_type.dart';

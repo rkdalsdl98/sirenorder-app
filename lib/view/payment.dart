@@ -46,7 +46,7 @@ class _PaymentState extends State<Payment> {
                 data: PaymentData(
                   pg: 'kakaopay.$kakaopayCode', // PG사
                   payMethod: 'card', // 결제수단
-                  name: order.name, // 주문명
+                  name: order.menuname, // 주문명
                   merchantUid: orderId, // 주문번호
                   amount: order.amount, // 결제금액
                   customData: order.customData == null

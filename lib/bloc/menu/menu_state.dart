@@ -4,35 +4,36 @@ import 'package:sirenorder_app/type/bloc/bloc_error_type.dart';
 
 abstract class MenuBlocState extends Equatable {
   List<MenuModel> menus;
-  MenuBlocState(this.menus);
+  MenuDetailModel? detail;
+  MenuBlocState(this.menus, this.detail);
 
   @override
   List<Object?> get props => [];
 }
 
 class MenuBlocInitState extends MenuBlocState {
-  MenuBlocInitState(super.menus);
+  MenuBlocInitState() : super([], null);
 
   @override
   List<Object?> get props => [];
 }
 
 class MenuBlocLoadingState extends MenuBlocState {
-  MenuBlocLoadingState(super.menus);
+  MenuBlocLoadingState(super.menus, super.detail);
 
   @override
   List<Object?> get props => [];
 }
 
 class MenuBlocLoadedState extends MenuBlocState {
-  MenuBlocLoadedState(super.menus);
+  MenuBlocLoadedState(super.menus, super.detail);
   @override
   List<Object?> get props => [];
 }
 
 class MenuBlocErrorState extends MenuBlocState {
   final BlocException exception;
-  MenuBlocErrorState(super.menus, this.exception);
+  MenuBlocErrorState(super.menus, super.detail, this.exception);
 
   @override
   List<Object?> get props => [exception];

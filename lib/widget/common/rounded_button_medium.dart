@@ -21,22 +21,25 @@ class RoundedButtonMedium extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(180),
-        border: Border.all(color: textColor),
-        color: backgroundColor,
-      ),
-      child: Align(
-        alignment: Alignment.center,
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyles.defaultStyle.copyWith(
-            color: textColor,
-            fontSize: fontSize ?? 12,
-            fontWeight: FontWeight.w500,
+    return InkWell(
+      onTap: onTab,
+      child: Container(
+        padding: padding,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(180),
+          border: Border.all(color: textColor),
+          color: backgroundColor,
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyles.defaultStyle.copyWith(
+              color: textColor,
+              fontSize: fontSize ?? 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ),

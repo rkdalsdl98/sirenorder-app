@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/notification/event/close_notifications_event.dart';
+import 'package:sirenorder_app/bloc/notification/notification_bloc.dart';
+import 'package:sirenorder_app/bloc/user/event/user_logout_event.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/type/other_menu_content.dart';
+import 'package:sirenorder_app/widget/common/rounded_button_medium.dart';
 import 'package:sirenorder_app/widget/home/page/other/other_menu_contents.dart';
 import 'package:sirenorder_app/widget/home/page/other/other_page_menus.dart';
 import 'package:sirenorder_app/widget/home/page/other/other_service.dart';
 
 class OtherPage extends StatelessWidget {
   const OtherPage({super.key});
+
+  logout(BuildContext context) {
+    final userBloc = context.read<UserBloc>();
+    final notifyBloc = context.read<NotificationBloc>();
+    notifyBloc.add(CloseNotificationsEvent());
+    userBloc.add(UserLogoutEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +42,13 @@ class OtherPage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const OtherService(),
+                  BlocBuilder<UserBloc, UserBlocState>(builder: (_, state) {
+                    final user = state.user;
+                    if (user != null) {
+                      return logoutHelper(context);
+                    }
+                    return const OtherService();
+                  }),
                   const OtherPageMenus(),
                   OtherMenuContents(
                     menuname: "Pay",
@@ -58,6 +78,20 @@ class OtherPage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget logoutHelper(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: SizedBox(
+        width: 100 * getScaleWidth(context),
+        height: 30 * getScaleHeight(context),
+        child: RoundedButtonMedium(
+          text: "로그아웃",
+          onTab: () => logout(context),
+        ),
       ),
     );
   }

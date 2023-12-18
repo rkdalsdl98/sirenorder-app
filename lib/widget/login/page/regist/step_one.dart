@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/regist/event/clear_event.dart';
 import 'package:sirenorder_app/bloc/regist/regist_bloc.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
-import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/type/check_state.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_small.dart';
 import 'package:sirenorder_app/widget/login/page/regist/double_check_box.dart';

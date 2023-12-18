@@ -70,7 +70,7 @@ class OrderInfo {
     if (json['deliveryinfo'] != null) {
       deliveryInfo = DeliveryInfo.fromJson(json['deliveryinfo']);
     } else {
-      deliveryInfo = {};
+      deliveryInfo = null;
     }
 
     if (json['menus'] != null) {

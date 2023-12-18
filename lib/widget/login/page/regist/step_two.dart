@@ -153,7 +153,6 @@ class _StepTwoState extends State<StepTwo> {
       }
       return Stack(
         children: [
-          if (isLoading) const LoadingIndicator(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -210,7 +209,8 @@ class _StepTwoState extends State<StepTwo> {
                 ),
               )
             ],
-          )
+          ),
+          if (isLoading) const LoadingIndicator(),
         ],
       );
     });

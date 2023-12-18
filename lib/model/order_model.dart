@@ -4,21 +4,21 @@ import 'package:sirenorder_app/type/bloc/menu_type.dart';
 import 'package:sirenorder_app/type/order_state.dart';
 
 class OrderModel {
-  late String buyerName, buyerEmail, buyerTel, name;
+  late String buyerName, buyerEmail, buyerTel, menuname;
   late PaymentCustomData? customData;
   late final int amount;
 
-  OrderModel(
-    this.name,
-    this.buyerTel,
-    this.buyerEmail,
-    this.buyerName,
-    this.customData,
-    this.amount,
-  );
+  OrderModel({
+    required String menuname,
+    required String buyerTel,
+    required String buyerEmail,
+    required String buyerName,
+    PaymentCustomData? customData,
+    required int amount,
+  });
 
   OrderModel.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
+    menuname = json['name'];
     buyerTel = json['buyer_tel'];
     buyerEmail = json['buyer_email'];
     buyerName = json['buyer_name'];
@@ -32,7 +32,7 @@ class OrderModel {
   }
 
   Map<String, dynamic> toJson() => {
-        "name": name,
+        "name": menuname,
         "buyer_tel": buyerTel,
         "buyer_email": buyerEmail,
         "buyer_name": buyerName,
@@ -42,30 +42,38 @@ class OrderModel {
 }
 
 class DeliveryInfo {
-  late String memo, paymenttype;
+  late String memo, paymenttype, packagingMethod, size, tempture;
   late bool take;
 
   DeliveryInfo(
     this.memo,
     this.paymenttype,
     this.take,
+    this.packagingMethod,
+    this.size,
   );
 
   DeliveryInfo.fromJson(Map<String, dynamic> json)
       : memo = json['memo'],
         take = json['take'],
-        paymenttype = json['paymenttype'];
+        paymenttype = json['paymenttype'] ?? "card",
+        size = json['size'],
+        tempture = json['tempture'] ?? "HOT",
+        packagingMethod = json['packaging-method'];
 
   Map<String, dynamic> toJson() => {
         "memo": memo,
         "take": take,
         "paymenttype": paymenttype,
+        "size": size,
+        "tempture": tempture,
+        "packaging-method": packagingMethod,
       };
 }
 
 class MenuModel {
   late String name, en_name, thumbnail;
-  late int price, detailId;
+  late int detailId;
   late MenuCategory category;
   int count = 1;
 
@@ -75,7 +83,6 @@ class MenuModel {
     this.name,
     this.en_name,
     this.thumbnail,
-    this.price,
     this.detailId,
   );
 
@@ -83,18 +90,15 @@ class MenuModel {
     name = json['name'];
     en_name = json['en_name'];
     thumbnail = json['thumbnail'];
-    price = json['price'];
     category = convertCategory(json['category']);
     detailId = json['detailId'];
   }
 
   Map<String, dynamic> toJson() => {
         "name": name,
-        "count": count,
         "category": category.name,
         "en_name": en_name,
         "thumbnail": thumbnail,
-        "price": price,
         "detailId": detailId,
       };
 
@@ -114,21 +118,21 @@ class MenuModel {
 
 class MenuDetailModel {
   String? description;
-  late List<dynamic> allergys, nutritions;
-  late int id;
+  late final List<dynamic> allergys, nutritions;
+  late final int price;
 
   MenuDetailModel(
     this.description,
     this.allergys,
     this.nutritions,
-    this.id,
+    this.price,
   );
 
   MenuDetailModel.fromJson(Map<String, dynamic> json) {
     description = json['description'];
-    id = json['id'];
     allergys = [];
     nutritions = [];
+    price = json['price'];
 
     if (json['allergys'] != null) {
       for (var allergy in json['allergys']) {
@@ -138,7 +142,7 @@ class MenuDetailModel {
 
     if (json['nutritions'] != null) {
       for (var nutrition in json['nutritions']) {
-        nutritions.add(NutritionsModel.fromJson(nutrition));
+        nutritions.add(nutrition);
       }
     }
   }
@@ -155,7 +159,8 @@ class NutritionsModel {
       cholesterol,
       transfat,
       saturatedfat,
-      caffeine;
+      caffeine,
+      volume;
 
   NutritionsModel(
     this.salt,
@@ -169,6 +174,7 @@ class NutritionsModel {
     this.fat,
     this.protein,
     this.transfat,
+    this.volume,
   );
 
   NutritionsModel.fromJson(Map<String, dynamic> json)
@@ -182,7 +188,8 @@ class NutritionsModel {
         fat = json['fat'],
         cholesterol = json['cholesterol'],
         transfat = json['transfat'],
-        saturatedfat = json['saturatedfat'];
+        saturatedfat = json['saturatedfat'],
+        volume = json['volume'];
 
   Map<String, dynamic> toJson() => {
         "salt": salt,
@@ -196,5 +203,32 @@ class NutritionsModel {
         "cholesterol": cholesterol,
         "transfat": transfat,
         "saturatedfat": saturatedfat,
+        "volume": volume,
       };
 }
+
+const List<String> nutritionCategorys = [
+  "calorie",
+  "carbohydrate",
+  "sugars",
+  "salt",
+  "protein",
+  "fat",
+  "cholesterol",
+  "transfat",
+  "saturatedfat",
+  "caffeine",
+];
+
+const List<String> nutritionKRCategorys = [
+  "칼로리",
+  "탄수화물",
+  "설탕",
+  "소금",
+  "단백질",
+  "지방",
+  "콜레스테롤",
+  "트랜스지방",
+  "포화지방",
+  "카페인",
+];

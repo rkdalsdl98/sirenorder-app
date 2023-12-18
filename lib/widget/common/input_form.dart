@@ -49,9 +49,7 @@ class InputForm extends StatelessWidget {
             return TextFormField(
               autocorrect: false,
               readOnly: readOnly,
-              onSaved: (value) {
-                onUpdateResult(key, value);
-              },
+              onSaved: (value) => onUpdateResult(key, value),
               maxLines: field['max_lines'] ?? 1,
               maxLength: field['max_length'] ?? 50,
               validator: (value) {

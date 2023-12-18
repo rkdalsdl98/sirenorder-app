@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sirenorder_app/type/sse/sse_response.dart';
 
 final base = dotenv.env['BASE_URL'];
 
@@ -12,8 +13,11 @@ enum RequestRoute {
   publishcode,
   code,
   menu,
+  menudetail,
   orderstate,
-  notify,
+  sse,
+  store,
+  storedetail,
 }
 
 const Map<RequestRoute, String> routes = {
@@ -26,7 +30,10 @@ const Map<RequestRoute, String> routes = {
   RequestRoute.order: "/store/order/send",
   RequestRoute.menu: "/menu",
   RequestRoute.orderstate: "/store/order/state",
-  RequestRoute.notify: "/sse/push",
+  RequestRoute.sse: "/sse/listen",
+  RequestRoute.store: "/store",
+  RequestRoute.storedetail: "/store/detail",
+  RequestRoute.menudetail: "/menu/detail"
 };
 
 Future<Response> fetchGet(
@@ -76,11 +83,11 @@ Future<Response> fetchPost(
   return await dio.post(url, data: body);
 }
 
-Future<Response<ResponseBody>> sse({
+Future<SSEResponse> sse({
   Map<String, dynamic>? queryParams,
   Map<String, dynamic>? headers,
 }) async {
-  final url = "$base/sse/listen";
+  final url = "$base${routes[RequestRoute.sse]}";
   final BaseOptions options = BaseOptions(
     baseUrl: url,
     connectTimeout: const Duration(seconds: 60),
@@ -96,6 +103,8 @@ Future<Response<ResponseBody>> sse({
     queryParameters: queryParams,
   );
 
-  final Dio dio = Dio(options);
-  return await dio.get<ResponseBody>(url);
+  final Dio conn = Dio(options);
+  final Response<ResponseBody> rs = await conn.get<ResponseBody>(url);
+
+  return SSEResponse(conn, rs);
 }

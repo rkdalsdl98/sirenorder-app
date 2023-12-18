@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:sirenorder_app/model/order_model.dart';
 
 class UserModel extends Equatable {
   String? email, tel, nickname, accesstoken, createdAt, updatedAt;
@@ -129,21 +130,6 @@ class OrderHistory extends Equatable {
 
   @override
   List<Object?> get props => [];
-}
-
-class DeliveryInfo {
-  String? memo, paymenttype;
-  bool? take;
-
-  DeliveryInfo.fromJson(Map<String, dynamic> json)
-      : memo = json['memo'],
-        paymenttype = json['paymenttype'],
-        take = json['take'];
-  Map<String, dynamic> toJson() => {
-        "memo": memo,
-        "paymenttype": paymenttype,
-        "take": take,
-      };
 }
 
 class MenuInfo {

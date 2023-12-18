@@ -1,9 +1,11 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/notification/event/close_notifications_event.dart';
 import 'package:sirenorder_app/bloc/notification/event/listen_notifications_event.dart';
 import 'package:sirenorder_app/bloc/notification/event/notification_event.dart';
 import 'package:sirenorder_app/bloc/notification/event/sse_notify_event.dart';
+import 'package:sirenorder_app/bloc/notification/handler/close_notifications_event.dart';
 import 'package:sirenorder_app/bloc/notification/handler/listen_notifications_event_handler.dart';
 import 'package:sirenorder_app/bloc/notification/handler/sse_notify_event_handler.dart';
 import 'package:sirenorder_app/bloc/notification/notification_state.dart';
@@ -23,6 +25,12 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationBlocState> {
       },
       transformer: sequential(),
     );
+    on<CloseNotificationsEvent>(
+      (event, emit) async {
+        await closeNotifications(emit, event);
+      },
+      transformer: sequential(),
+    );
   }
 
   listenNotifications(
@@ -35,6 +43,21 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationBlocState> {
         event,
         state,
         bloc: this,
+      );
+    } catch (e) {
+      handleException(emit, e);
+    }
+  }
+
+  closeNotifications(
+    emit,
+    NotificationEvent event,
+  ) async {
+    try {
+      await CloseNotificationsEventHandler().handleEvent(
+        emit,
+        event,
+        state,
       );
     } catch (e) {
       handleException(emit, e);

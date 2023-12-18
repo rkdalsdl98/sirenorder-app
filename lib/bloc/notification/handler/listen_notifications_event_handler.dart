@@ -11,6 +11,7 @@ import 'package:sirenorder_app/bloc/notification/notification_state.dart';
 import 'package:sirenorder_app/datasource/api_manager.dart';
 import 'package:sirenorder_app/model/subject.model.dart';
 import 'package:sirenorder_app/type/bloc/bloc_error_type.dart';
+import 'package:sirenorder_app/type/sse/sse_response.dart';
 
 class ListenNotificationsEventHandler extends NotificationEventHandler {
   @override
@@ -27,9 +28,9 @@ class ListenNotificationsEventHandler extends NotificationEventHandler {
       );
     }
 
-    if (state.subscription == null) {
-      final subscription = await getSubscription(event.userEmail, bloc);
-      emit(NotificationBlocListeningState(subscription, state.subject));
+    if (state.listener == null) {
+      final listener = await listen(event.userEmail, bloc);
+      emit(NotificationBlocListeningState(listener, state.subject));
     }
   }
 
@@ -39,7 +40,7 @@ class ListenNotificationsEventHandler extends NotificationEventHandler {
     });
   }
 
-  void onData(
+  void _onData(
     String data,
     NotificationBloc bloc,
   ) {
@@ -50,22 +51,25 @@ class ListenNotificationsEventHandler extends NotificationEventHandler {
     }
   }
 
-  Future<StreamSubscription<String>> getSubscription(
+  Future<SSEConnection> listen(
     String userEmail,
     NotificationBloc bloc,
   ) async {
-    final stream =
-        (await sse(queryParams: {"listener_email": userEmail})).data?.stream;
+    final sseRes = await sse(queryParams: {"listener_email": userEmail});
+    final stream = sseRes.rs.data?.stream;
     if (stream == null) {
       throw BlocException(
         "서버와 연결이 불안정하여 알림을 받아올 수 없습니다.",
         ExceptionType.ServiceUnavailableException,
       );
     }
-    return stream
-        .transform(unit8Transformer())
-        .transform(const Utf8Decoder())
-        .transform(const LineSplitter())
-        .listen((event) => onData(event, bloc));
+    return SSEConnection(
+      sseRes.conn,
+      stream
+          .transform(unit8Transformer())
+          .transform(const Utf8Decoder())
+          .transform(const LineSplitter())
+          .listen((event) => _onData(event, bloc)),
+    );
   }
 }

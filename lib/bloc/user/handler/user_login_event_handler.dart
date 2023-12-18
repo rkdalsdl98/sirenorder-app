@@ -29,7 +29,7 @@ class UserLoginEventHandler extends UserEventHandler {
       );
     }
 
-    emit(UserBlocLoadingState(state.user, state.orderState));
+    emit(UserBlocLoadingState(state.user));
     final res = await _sendLoginRequest(event);
     if (res.data['message'] != null) {
       final failed = FailedResponse.fromJson(res.data);
@@ -46,7 +46,7 @@ class UserLoginEventHandler extends UserEventHandler {
 
     final user = UserModel.fromJson(success.data);
     await repository.saveData("token", {"accesstoken": user.accesstoken});
-    emit(UserBlocLoadedState(user, state.orderState));
+    emit(UserBlocLoadedState(user));
   }
 
   LoginType _getLoginType(UserLoginEvent event) {

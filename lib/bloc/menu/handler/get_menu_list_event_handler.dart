@@ -13,21 +13,15 @@ class GetMenuListEventHandler extends MenuEventHandler {
   handleEvent(
     emit,
     MenuEvent event,
-    MenuBlocState state, {
-    MenuRepository? repository,
-  }) async {
+    MenuBlocState state,
+  ) async {
     if (event is! GetMenuListEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
         ExceptionType.StateException,
       );
-    } else if (repository == null) {
-      throw BlocException(
-        "저장소 초기화에 실패했습니다.",
-        ExceptionType.RepsitoryNotDefinedException,
-      );
     }
-    emit(MenuBlocLoadingState(state.menus));
+    emit(MenuBlocLoadingState(state.menus, state.detail));
     final res = await fetchGet(RequestRoute.menu);
     if (res.data['message'] != null) {
       final failed = FailedResponse.fromJson(res.data);
@@ -42,6 +36,6 @@ class GetMenuListEventHandler extends MenuEventHandler {
       );
     }
     final menus = success.data.map((menu) => MenuModel.fromJson(menu)).toList();
-    emit(MenuBlocLoadedState(menus));
+    emit(MenuBlocLoadedState(menus, state.detail));
   }
 }
