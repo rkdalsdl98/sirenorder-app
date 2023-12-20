@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/menu/event/clear_menu_detail_event.dart';
 import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
-import 'package:sirenorder_app/bloc/order/event/clear_data_event.dart';
-import 'package:sirenorder_app/bloc/order/order_bloc.dart';
 import 'package:sirenorder_app/bloc/store/store_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/model/order_model.dart';
@@ -87,10 +85,7 @@ class MenuItem extends StatelessWidget {
         "amount": amount,
         "type": type,
       },
-    ).whenComplete(() {
-      context.read<MenuBloc>().add(ClearMenuDetailEvent());
-      context.read<OrderBloc>().add(ClearDataEvent());
-    });
+    ).whenComplete(() => context.read<MenuBloc>().add(ClearMenuDetailEvent()));
     return;
 
     // final order = OrderModel(

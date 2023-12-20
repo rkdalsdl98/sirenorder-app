@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sirenorder_app/bloc/basket/basket_bloc.dart';
 import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
 import 'package:sirenorder_app/bloc/notification/notification_bloc.dart';
 import 'package:sirenorder_app/bloc/order/order_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:sirenorder_app/bloc/regist/regist_bloc.dart';
 import 'package:sirenorder_app/bloc/store/store_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/datasource/local_manager.dart';
+import 'package:sirenorder_app/respository/basket_repository.dart';
 import 'package:sirenorder_app/respository/menu_repository.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/system/color_schemes.g.dart';
@@ -27,6 +29,9 @@ class App extends StatelessWidget {
         RepositoryProvider(
             create: (repoContext) =>
                 MenuRepository(repoContext.read<LocalManager>())),
+        RepositoryProvider(
+            create: (repoContext) =>
+                BasketRepository(repoContext.read<LocalManager>())),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -44,6 +49,11 @@ class App extends StatelessWidget {
             lazy: false,
           ),
           BlocProvider(create: (blocContext) => OrderBloc()),
+          BlocProvider(
+            create: (blocContext) =>
+                BasketBloc(blocContext.read<BasketRepository>()),
+            lazy: false,
+          ),
         ],
         child: MaterialApp(
           title: "SirenOrder",

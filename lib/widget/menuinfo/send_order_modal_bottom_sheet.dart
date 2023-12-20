@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/basket/basket_bloc.dart';
+import 'package:sirenorder_app/bloc/basket/event/put_menu_event.dart';
 import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
 import 'package:sirenorder_app/bloc/order/event/upsert_data_event.dart';
 import 'package:sirenorder_app/bloc/order/order_bloc.dart';
 import 'package:sirenorder_app/bloc/store/store_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
+import 'package:sirenorder_app/model/basket_item_model.dart';
 import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/system/system_message.dart';
+import 'package:sirenorder_app/type/order_state.dart';
 import 'package:sirenorder_app/widget/common/input_form.dart';
 import 'package:sirenorder_app/widget/menuinfo/select_packaging_method.dart';
 import 'package:sirenorder_app/widget/menuinfo/select_size.dart';
@@ -56,24 +60,103 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
       return;
     }
     form.save();
-
     OrderModel? order = createOrder();
+    if (order == null) {
+      return;
+    }
+    Navigator.pop(context);
+    Navigator.pushNamed(
+      context,
+      "/payment",
+      arguments: {
+        "order": order.toJson(),
+        "type": "order",
+      },
+    );
+    return;
+  }
+
+  void onPutMenu() {
+    final basket = context.read<BasketBloc>().state.basket;
+    if (basket.length >= 20) {
+      showSnackBarMessage(context, "장바구니엔 최대 20가지 메뉴를 담을 수 있습니다.");
+      return;
+    }
+    final form = _formkey.currentState;
+    if (form == null) {
+      showSnackBarMessage(
+        context,
+        "시스템에 오류가 발생했습니다.\n페이지를 닫고, 주문을 다시 진행 해주세요.",
+      );
+      return;
+    }
+    form.save();
+    BasketItemModel? item = createBasketItem();
+    if (item == null) {
+      return;
+    }
+    context.read<BasketBloc>().add(PutMenuEvent(item));
+  }
+
+  DeliveryInfo? createDeliveryInfo() {
+    final data = context.read<OrderBloc>().state.data;
+    if (data.keys.length < 3) {
+      showSnackBarMessage(context, "선택하지 않은 항목이 있습니다.");
+      Navigator.pop(context);
+      return null;
+    }
+    return DeliveryInfo(
+      result['memo'] ?? "",
+      "card",
+      data['take'],
+      data['packagingMethod'],
+      data['tempture'] ?? "HOT",
+      data['size'],
+    );
+  }
+
+  BasketItemModel? createBasketItem() {
+    final price = context.read<MenuBloc>().state.detail!.price;
+    final deliveryInfo = createDeliveryInfo();
+    if (deliveryInfo == null) {
+      return null;
+    }
+    BasketItemModel item = BasketItemModel(
+      deliveryInfo,
+      widget.menu,
+      price,
+    );
+    return item;
   }
 
   OrderModel? createOrder() {
-    return null;
+    final deliveryInfo = createDeliveryInfo();
+    if (deliveryInfo == null) {
+      return null;
+    }
+    final amount =
+        context.read<MenuBloc>().state.detail!.price * widget.menu.count;
+    final user = context.read<UserBloc>().state.user!;
+    final storeId = context.read<StoreBloc>().state.selStore!.storeId;
+    final customData = PaymentCustomData.fromJson({
+      "type": "order",
+      "data": {
+        "storeId": storeId,
+        "orderInfo": {
+          "deliveryinfo": deliveryInfo.toJson(),
+          "menus": [widget.menu],
+        },
+      },
+    });
 
-    // 장바구니 목록 불러오기 루틴 추가 해야 됨
-    // final orderBloc = context.read<OrderBloc>();
-    // final data = orderBloc.state.data;
-    // final deliveryInfo = DeliveryInfo.fromJson({
-    //   ...data,
-    //   "memo": result['memo'] ?? "",
-    // });
-    // final amount =
-    //     context.read<MenuBloc>().state.detail!.price * widget.menu.count;
-    // final user = context.read<UserBloc>().state.user!;
-    // final storeId = context.read<StoreBloc>().state.selStore!.storeId;
+    return OrderModel.fromJson({
+      "name": widget.menu.name,
+      "buyer_tel": user.tel!,
+      "buyer_email": user.email!,
+      "buyer_name": user.nickname!,
+      "custom_data": customData.toJson(),
+      "amount": amount,
+    });
   }
 
   @override
@@ -153,6 +236,7 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
               decrementCount: decrementCount,
               count: widget.menu.count,
               onPaying: onPaying,
+              onPutMenu: onPutMenu,
             ),
           ],
         ),

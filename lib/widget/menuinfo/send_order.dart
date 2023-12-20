@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/order/event/clear_data_event.dart';
+import 'package:sirenorder_app/bloc/order/order_bloc.dart';
 import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
+import 'package:sirenorder_app/system/system_message.dart';
+import 'package:sirenorder_app/type/bloc/bloc_error_type.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_small.dart';
 import 'package:sirenorder_app/widget/menuinfo/send_order_modal_bottom_sheet.dart';
 
@@ -21,7 +26,14 @@ class SendOrder extends StatelessWidget {
         sizes: sizes,
         menu: menu,
       ),
-    );
+    ).then((value) {
+      if (value is BlocException) {
+        showSnackBarMessage(context, value.message);
+      } else if (value is bool) {
+        showSnackBarMessage(context, "장바구니에 메뉴를 담았습니다.");
+      }
+      context.read<OrderBloc>().add(ClearDataEvent());
+    });
   }
 
   @override

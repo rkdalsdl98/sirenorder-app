@@ -35,4 +35,5 @@ enum ExceptionType {
   ServiceUnavailableException,
   AlreadySubscribeStreamException,
   InitializeException,
+  DuplicatedDataExcpetion,
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/basket/basket_bloc.dart';
 import 'package:sirenorder_app/bloc/store/event/select_store_event.dart';
 import 'package:sirenorder_app/bloc/store/store_bloc.dart';
 import 'package:sirenorder_app/bloc/store/store_bloc_state.dart';
@@ -77,7 +78,7 @@ class SelectStore extends StatelessWidget {
                         left: 11 * getScaleWidth(builderContext),
                         top: 9 * getScaleHeight(builderContext),
                         child: Text(
-                          "0",
+                          "${context.watch<BasketBloc>().state.basket.length}",
                           style: TextStyles.titleStyle.copyWith(
                             fontSize: 14,
                             color:

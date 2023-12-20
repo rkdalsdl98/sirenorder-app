@@ -4,33 +4,38 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sirenorder_app/type/bloc/bloc_error_type.dart';
 
 class LocalManager {
-  SharedPreferences? _storage;
-  LocalManager() {
-    SharedPreferences.getInstance().then((storage) => _storage = storage);
-  }
-
-  Map<String, dynamic>? getJsonData(String key) {
-    if (_storage == null) {
-      throw BlocException(
-        "로컬 저장소 초기화에 실패했습니다.",
-        ExceptionType.RepsitoryLoadException,
-      );
-    }
-    final data = _storage!.getString(key);
+  Future<Map<String, dynamic>?> getJsonData(String key) async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    final data = storage.getString(key);
     if (data == null) {
       return null;
     }
     return jsonDecode(data);
   }
 
-  Future<bool> saveDataFromJson(String key, Map<String, dynamic> json) async {
-    if (_storage == null) {
-      throw BlocException(
-        "로컬 저장소 초기화에 실패했습니다.",
-        ExceptionType.RepsitoryLoadException,
-      );
+  Future<List<Map<String, dynamic>>?> getJsonListData(String key) async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    final list = storage.getStringList(key);
+    if (list == null) {
+      return null;
     }
-    return await _storage!
+    return stringListToJsonList(list);
+  }
+
+  Future<bool> saveDataFromJsonList(
+      String key, List<Map<String, dynamic>> list) async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    return await storage
+        .setStringList(key, jsonListToStringList(list))
+        .catchError((err) => throw BlocException(
+              "알 수 없는 오류가 발생했습니다.",
+              ExceptionType.UnknownException,
+            ));
+  }
+
+  Future<bool> saveDataFromJson(String key, Map<String, dynamic> json) async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    return await storage
         .setString(key, jsonEncode(json))
         .catchError((err) => throw BlocException(
               "알 수 없는 오류가 발생했습니다.",
@@ -39,15 +44,23 @@ class LocalManager {
   }
 
   Future<bool> deleteData(String key) async {
-    if (_storage == null) {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    return await storage.remove(key).catchError((err) {
       throw BlocException(
-        "로컬 저장소 초기화에 실패했습니다.",
-        ExceptionType.RepsitoryLoadException,
+        "알 수 없는 오류가 발생했습니다.",
+        ExceptionType.UnknownException,
       );
-    }
-    return await _storage!.remove(key).catchError((err) => throw BlocException(
-          "알 수 없는 오류가 발생했습니다.",
-          ExceptionType.UnknownException,
-        ));
+    });
+  }
+
+  List<String> jsonListToStringList(List<Map<String, dynamic>> list) {
+    return list.map<String>((json) => jsonEncode(json)).toList();
+  }
+
+  List<Map<String, dynamic>> stringListToJsonList(List<String> list) {
+    return list
+        .map<Map<String, dynamic>>(
+            (str) => jsonDecode(str) as Map<String, dynamic>)
+        .toList();
   }
 }

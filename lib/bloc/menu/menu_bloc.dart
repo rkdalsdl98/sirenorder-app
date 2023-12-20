@@ -31,7 +31,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuBlocState> {
       (event, emit) {
         clearDetail(emit, event);
       },
-      transformer: droppable(),
+      transformer: sequential(),
     );
   }
 

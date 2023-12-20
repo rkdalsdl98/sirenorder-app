@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/basket/basket_bloc.dart';
+import 'package:sirenorder_app/bloc/basket/basket_bloc_state.dart';
+import 'package:sirenorder_app/bloc/basket/event/showed_error_event.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
+import 'package:sirenorder_app/system/system_message.dart';
 import 'package:sirenorder_app/widget/basket/basket_view_body.dart';
+import 'package:sirenorder_app/widget/common/loading_indicator.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_medium.dart';
 import 'package:sirenorder_app/widget/home/page/order/select_store.dart';
 
@@ -54,7 +60,32 @@ class Basket extends StatelessWidget {
               ],
             ),
           ),
-          const BasketViewBody(),
+          BlocBuilder<BasketBloc, BasketBlocState>(
+              builder: (blocContext, state) {
+            final basket = state.basket;
+            if (state is BasketBlocErrorState) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                showSnackBarMessage(context, state.exception.message);
+                Future.delayed(const Duration(milliseconds: 1)).then((_) =>
+                    blocContext.read<BasketBloc>().add(ShowedErrorEvent()));
+              });
+            } else if (state is BasketBlocSuccessedActionState) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Future.delayed(const Duration(milliseconds: 1)).then((_) =>
+                    blocContext.read<BasketBloc>().add(ShowedErrorEvent()));
+              });
+            }
+            return Expanded(
+              child: Stack(
+                children: [
+                  basket.isNotEmpty
+                      ? BasketViewBody(basket: basket)
+                      : emptyHelper(context),
+                  if (state is BasketBlocLoadingState) const LoadingIndicator(),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -85,7 +116,7 @@ Widget emptyHelper(BuildContext context) {
             ),
           ),
           SizedBox(
-            width: 100 * getScaleWidth(context),
+            width: 110 * getScaleWidth(context),
             child: RoundedButtonMedium(
               text: "메뉴 담으러 가기",
               padding: const EdgeInsets.symmetric(

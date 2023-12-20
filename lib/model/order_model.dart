@@ -5,7 +5,7 @@ import 'package:sirenorder_app/type/order_state.dart';
 
 class OrderModel {
   late String buyerName, buyerEmail, buyerTel, menuname;
-  late PaymentCustomData? customData;
+  PaymentCustomData? customData;
   late final int amount;
 
   OrderModel({
@@ -42,14 +42,15 @@ class OrderModel {
 }
 
 class DeliveryInfo {
-  late String memo, paymenttype, packagingMethod, size, tempture;
-  late bool take;
+  final String memo, paymenttype, packagingMethod, size, tempture;
+  final bool take;
 
   DeliveryInfo(
     this.memo,
     this.paymenttype,
     this.take,
     this.packagingMethod,
+    this.tempture,
     this.size,
   );
 
@@ -59,7 +60,7 @@ class DeliveryInfo {
         paymenttype = json['paymenttype'] ?? "card",
         size = json['size'],
         tempture = json['tempture'] ?? "HOT",
-        packagingMethod = json['packaging-method'];
+        packagingMethod = json['packagingMethod'];
 
   Map<String, dynamic> toJson() => {
         "memo": memo,
@@ -67,7 +68,7 @@ class DeliveryInfo {
         "paymenttype": paymenttype,
         "size": size,
         "tempture": tempture,
-        "packaging-method": packagingMethod,
+        "packagingMethod": packagingMethod,
       };
 }
 
@@ -100,6 +101,7 @@ class MenuModel {
         "en_name": en_name,
         "thumbnail": thumbnail,
         "detailId": detailId,
+        "count": count,
       };
 
   MenuCategory convertCategory(dynamic data) {

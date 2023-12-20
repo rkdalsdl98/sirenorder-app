@@ -6,8 +6,8 @@ class UserRepository extends Equatable {
   const UserRepository(this._localManager);
 
   /// 토큰의 데이터 타입: { "accesstoken": string }
-  Map<String, dynamic>? getToken() {
-    return _localManager.getJsonData("token");
+  Future<Map<String, dynamic>?> getToken() async {
+    return await _localManager.getJsonData("token");
   }
 
   Future<bool> saveData(String key, Map<String, dynamic>? data) async {

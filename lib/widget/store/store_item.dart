@@ -114,7 +114,7 @@ class StoreItem extends StatelessWidget {
               ),
             ),
           ),
-          if (store.isOpen)
+          if (!store.isOpen)
             Container(
               decoration: const BoxDecoration(
                 color: Colors.black26,

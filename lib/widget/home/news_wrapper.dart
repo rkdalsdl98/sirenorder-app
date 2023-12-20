@@ -25,34 +25,27 @@ class NewsWrapper extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            InkWell(
-              onTap: () {
-                context
-                    .read<MenuBloc>()
-                    .add(GetMenuListEvent(MenuCategory.drink));
-              },
-              child: SizedBox(
-                width: 120 * getScaleWidth(context),
-                child: Row(
-                  children: [
-                    Image(
-                      image: const AssetImage("assets/img/email.png"),
-                      width: 30 * getScaleWidth(context),
-                      height: 22.8 * getScaleHeight(context),
-                    ),
-                    SizedBox(width: 10 * getScaleWidth(context)),
-                    FittedBox(
-                      fit: BoxFit.cover,
-                      child: Text(
-                        "What’s New?",
-                        style: TextStyles.defaultStyle.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                        ),
+            SizedBox(
+              width: 120 * getScaleWidth(context),
+              child: Row(
+                children: [
+                  Image(
+                    image: const AssetImage("assets/img/email.png"),
+                    width: 30 * getScaleWidth(context),
+                    height: 22.8 * getScaleHeight(context),
+                  ),
+                  SizedBox(width: 10 * getScaleWidth(context)),
+                  FittedBox(
+                    fit: BoxFit.cover,
+                    child: Text(
+                      "What’s New?",
+                      style: TextStyles.defaultStyle.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
             ),
             Icon(
