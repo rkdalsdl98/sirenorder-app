@@ -4,6 +4,8 @@ import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/view/basket.dart';
 import 'package:sirenorder_app/view/gift.dart';
+import 'package:sirenorder_app/view/gift_box.dart';
+import 'package:sirenorder_app/view/gift_detail.dart';
 import 'package:sirenorder_app/view/home.dart';
 import 'package:sirenorder_app/view/login.dart';
 import 'package:sirenorder_app/view/menu_info.dart';
@@ -68,6 +70,21 @@ Route<dynamic>? initGeneratedRoutes(
       );
     case '/basket':
       return MaterialPageRoute(builder: (routeContext) => const Basket());
+    case '/gift-box':
+      return MaterialPageRoute(
+        builder: (routeContext) => RepositoryProvider.value(
+          value: routeContext.read<UserRepository>(),
+          child: BlocProvider.value(
+            value: routeContext.read<UserBloc>(),
+            child: const GiftBox(),
+          ),
+        ),
+      );
+    case '/gift-detail':
+      return MaterialPageRoute(
+          builder: (routeBuilder) => GiftDetail(
+                data: args['gift'],
+              ));
     default:
       return null;
   }

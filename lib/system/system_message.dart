@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/user/event/update_gift_event.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/model/subject.model.dart';
 import 'package:sirenorder_app/model/user_model.dart';
 
@@ -33,6 +36,7 @@ void handleNotify(BuildContext context, SSESubject sses) {
         context,
         "${giftSubject.gift.from}님께서 보낸 선물이 도착했어요!",
       );
+      context.read<UserBloc>().add(UpdateGiftEvent(giftSubject.gift));
       break;
     case "order-notify":
       final orderSubject = sses.subject as OrderNotifySubject;

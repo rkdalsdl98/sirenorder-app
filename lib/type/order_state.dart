@@ -59,18 +59,19 @@ class OrderCustomData {
 
 class OrderInfo {
   late final List<dynamic> menus;
-  late final dynamic deliveryInfo;
+  late final List<dynamic> deliveryInfos;
 
   OrderInfo(
-    this.deliveryInfo,
+    this.deliveryInfos,
     this.menus,
   );
   OrderInfo.fromJson(Map<String, dynamic> json) {
     menus = [];
+    deliveryInfos = [];
     if (json['deliveryinfo'] != null) {
-      deliveryInfo = DeliveryInfo.fromJson(json['deliveryinfo']);
-    } else {
-      deliveryInfo = null;
+      for (var info in json['deliveryinfo']) {
+        deliveryInfos.add(info);
+      }
     }
 
     if (json['menus'] != null) {
@@ -82,7 +83,7 @@ class OrderInfo {
 
   Map<String, dynamic> toJson() => {
         "menus": menus,
-        "deliveryinfo": deliveryInfo.toJson(),
+        "deliveryinfo": deliveryInfos,
       };
 }
 

@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dio/dio.dart';
+import 'package:sirenorder_app/bloc/user/event/update_gift_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_login_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_logout_event.dart';
+import 'package:sirenorder_app/bloc/user/handler/update_gift_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_login_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_logout_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
@@ -25,6 +27,21 @@ class UserBloc extends Bloc<UserEvent, UserBlocState> {
       },
       transformer: sequential(),
     );
+    on<UpdateGiftEvent>((event, emit) {
+      updateGift(emit, event);
+    });
+  }
+
+  updateGift(emit, UserEvent event) {
+    try {
+      UpdateGiftEventHandler().handleEvent(
+        emit,
+        event,
+        state,
+      );
+    } catch (e) {
+      handleException(emit, e);
+    }
   }
 
   loginUser(emit, UserEvent event) async {

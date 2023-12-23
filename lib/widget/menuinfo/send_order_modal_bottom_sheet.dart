@@ -143,7 +143,7 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
       "data": {
         "storeId": storeId,
         "orderInfo": {
-          "deliveryinfo": deliveryInfo.toJson(),
+          "deliveryinfo": [deliveryInfo],
           "menus": [widget.menu],
         },
       },

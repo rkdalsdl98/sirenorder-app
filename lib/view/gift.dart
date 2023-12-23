@@ -10,6 +10,7 @@ import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/system/methods.dart';
 import 'package:sirenorder_app/system/system_message.dart';
+import 'package:sirenorder_app/type/order_state.dart';
 import 'package:sirenorder_app/widget/common/input_form.dart';
 import 'package:sirenorder_app/widget/common/loading_indicator.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_small.dart';
@@ -59,10 +60,7 @@ class _GiftState extends State<Gift> {
         "알 수 없는 오류로 결제를 할 수 없습니다.\n해당 페이지를 닫은 이후에 다시 시도해주세요.",
       );
       return;
-    }
-
-    final validate = form.validate();
-    if (!validate) {
+    } else if (!form.validate()) {
       return;
     }
     form.save();
@@ -70,34 +68,50 @@ class _GiftState extends State<Gift> {
     final bloc = context.read<UserBloc>();
     final user = bloc.state.user!;
 
-    // final order = OrderModel(
-    //   menu.name,
-    //   user.tel!,
-    //   user.email!,
-    //   user.nickname!,
-    //   PaymentCustomData.fromJson({
-    //     "type": widget.type,
-    //     "data": {
-    //       "giftInfo": {
-    //         "from": result["to"],
-    //         "to": user.email,
-    //         "wrappingtype": "card$cardNum",
-    //         "menu": menu,
-    //         "message": result["message"],
-    //       }
-    //     }
-    //   }),
-    //   0,
-    // );
+    // if (result["to"] == user.email) {
+    //   showSnackBarMessage(
+    //     context,
+    //     "자신에게는 선물을 보낼 수 없습니다.",
+    //   );
+    //   return;
+    // }
+    final OrderModel order = createOrder();
+    Navigator.pushNamed(
+      context,
+      "/payment",
+      arguments: {
+        "order": order.toJson(),
+        "type": widget.type,
+      },
+    );
+  }
 
-    // Navigator.pushNamed(
-    //   context,
-    //   "/payment",
-    //   arguments: {
-    //     "order": order.toJson(),
-    //     "type": widget.type,
-    //   },
-    // );
+  OrderModel createOrder() {
+    final amount = context.read<MenuBloc>().state.detail!.price * menu.count;
+    final user = context.read<UserBloc>().state.user!;
+    final message = (result["message"] == "" || result["message"] == null)
+        ? "고마음이 가득 담긴 선물"
+        : result["message"];
+    final customData = PaymentCustomData.fromJson({
+      "type": "gift",
+      "data": {
+        "giftInfo": {
+          "from": user.email,
+          "to": result["to"],
+          "message": message,
+          "wrappingtype": "card$cardNum",
+          "menu": menu,
+        },
+      },
+    });
+    return OrderModel.fromJson({
+      "name": menu.name,
+      "buyer_tel": user.tel!,
+      "buyer_email": user.email!,
+      "buyer_name": user.nickname!,
+      "custom_data": customData.toJson(),
+      "amount": amount,
+    });
   }
 
   @override

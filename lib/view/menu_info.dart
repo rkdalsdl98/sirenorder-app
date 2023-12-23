@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/menu/event/get_menu_detail_event.dart';
 import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
 import 'package:sirenorder_app/bloc/menu/menu_state.dart';
-import 'package:sirenorder_app/bloc/order/event/clear_data_event.dart';
-import 'package:sirenorder_app/bloc/order/order_bloc.dart';
 import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;

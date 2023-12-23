@@ -70,11 +70,13 @@ class Wallet {
 class GiftModel extends Equatable {
   String? uuid, to, from, wrappingtype, message;
   CouponModel? coupon;
+  bool? used;
 
   GiftModel.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
     to = json['to'];
     from = json['to'];
+    used = json['used'];
     message = json['message'];
     wrappingtype = json['wrappingtype'];
 
@@ -84,10 +86,11 @@ class GiftModel extends Equatable {
   }
   Map<String, dynamic> toJson() => {
         "uuid": uuid,
-        "coupon": coupon,
+        "coupon": coupon?.toJson(),
         "to": to,
         "from": from,
         "message": message,
+        "used": used,
         "wrappingtype": wrappingtype,
       };
 
@@ -98,7 +101,7 @@ class GiftModel extends Equatable {
 class OrderHistory extends Equatable {
   String? uuid, storeId;
   int? saleprice, totalprice;
-  DeliveryInfo? deliveryinfo;
+  List<DeliveryInfo>? deliveryinfos;
   List<MenuInfo>? menus;
 
   OrderHistory.fromJson(Map<String, dynamic> json) {
@@ -106,8 +109,10 @@ class OrderHistory extends Equatable {
     storeId = json['store_uid'];
     saleprice = json['saleprice'];
     totalprice = json['totalprice'];
+    deliveryinfos = [];
     if (json['deliveryinfo'] != null) {
-      deliveryinfo = DeliveryInfo.fromJson(json['deliveryinfo']);
+      deliveryinfos =
+          json['deliveryinfo'].map((json) => DeliveryInfo.fromJson(json));
     }
 
     menus = [];
@@ -124,7 +129,7 @@ class OrderHistory extends Equatable {
         "store_uid": storeId,
         "saleprice": saleprice,
         "totalprice": totalprice,
-        "deliveryinfo": deliveryinfo?.toJson(),
+        "deliveryinfo": deliveryinfos!.map<dynamic>((item) => item.toJson()),
         "menus": menus!.map((menu) => menu.toJson()),
       };
 
@@ -169,7 +174,7 @@ class CouponModel {
   Map<String, dynamic> toJson() => {
         "code": code,
         "menu_name": menu_name,
-        "expiration_period": expirationPeriod,
+        "expiration_period": expirationPeriod.toString(),
         "thumbnail": thumbnail,
       };
 }

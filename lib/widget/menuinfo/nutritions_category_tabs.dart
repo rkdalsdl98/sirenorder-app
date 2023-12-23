@@ -58,7 +58,7 @@ class NutritionCategoryTabs extends StatelessWidget {
           ),
           Positioned(
             bottom: 0,
-            left: (width * getScaleWidth(context) * pageOffset),
+            left: ((width * getScaleWidth(context)) * pageOffset),
             child: Container(
               width: width * getScaleWidth(context),
               padding: const EdgeInsets.symmetric(vertical: 10),

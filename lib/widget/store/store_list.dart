@@ -39,6 +39,12 @@ class _StoreListState extends State<StoreList> {
   }
 
   @override
+  void didUpdateWidget(covariant StoreList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    showList = widget.stores;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(

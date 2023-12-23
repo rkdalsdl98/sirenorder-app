@@ -175,19 +175,13 @@ class StoreDetail extends StatelessWidget {
                             ),
                             hoursHelper(
                               context,
-                              category: "배달",
-                              hours: Hours.fromJson({
-                                "open": "10:00",
-                                "close": "21:00",
-                              }),
+                              category: "매장",
+                              hours: detail.openhours.mon!,
                             ),
                             hoursHelper(
                               context,
-                              category: "배달",
-                              hours: Hours.fromJson({
-                                "open": "10:00",
-                                "close": "21:00",
-                              }),
+                              category: "사이렌 오더",
+                              hours: detail.sirenorderhours.mon!,
                             ),
                           ],
                         ),
@@ -210,7 +204,10 @@ class StoreDetail extends StatelessWidget {
                               fontSize: 14,
                             ),
                           ),
-                          const Text("인천지하철 2호선 서구청역 3번 출구 130m DT매장"),
+                          Text(
+                            detail.waytocome,
+                            style: TextStyles.defaultStyle,
+                          ),
                         ],
                       ),
                     ),

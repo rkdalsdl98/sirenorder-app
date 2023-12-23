@@ -22,7 +22,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int currIndex = 0;
-  bool notified = false;
 
   void onChangeIndex(int value) => setState(() {
         currIndex = value;
@@ -37,11 +36,8 @@ class _HomeState extends State<Home> {
       ),
       body: BlocBuilder<NotificationBloc, NotificationBlocState>(
           builder: (_, state) {
-        if (state is NotificationBlocReceiveState && !notified) {
+        if (state is NotificationBlocReceiveState) {
           handleNotify(context, state.subject!);
-          notified = true;
-        } else {
-          notified = false;
         }
         return IndexedStack(
           index: currIndex,

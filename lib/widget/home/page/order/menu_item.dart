@@ -87,38 +87,6 @@ class MenuItem extends StatelessWidget {
       },
     ).whenComplete(() => context.read<MenuBloc>().add(ClearMenuDetailEvent()));
     return;
-
-    // final order = OrderModel(
-    //   menu.name,
-    //   user.tel!,
-    //   user.email!,
-    //   user.nickname!,
-    //   PaymentCustomData.fromJson({
-    //     "type": type,
-    //     "data": {
-    //       "storeId": "d2b4192e-a1a9-4e94-9ab4-1047ddaec2ed",
-    //       "orderInfo": {
-    //         "deliveryinfo": {
-    //           "memo": "곧 가지러 감",
-    //           "take": true,
-    //           "paymenttype": "card",
-    //         },
-    //         "menus": [menu],
-    //       },
-    //     },
-    //   }),
-    //   amount,
-    // );
-
-    // Navigator.pushNamed(
-    //   context,
-    //   "/payment",
-    //   arguments: {
-    //     "order": order.toJson(),
-    //     "type": type,
-    //   },
-    // );
-    // return;
   }
 
   void showAlertDialog(

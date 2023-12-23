@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
+import 'package:sirenorder_app/bloc/order/order_bloc.dart';
+import 'package:sirenorder_app/bloc/store/store_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/model/basket_item_model.dart';
+import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/system/methods.dart';
+import 'package:sirenorder_app/system/system_message.dart';
+import 'package:sirenorder_app/type/order_state.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_medium.dart';
 
 class BasketViewBottomSheet extends StatefulWidget {
@@ -24,6 +32,54 @@ class _BasketViewBottomSheetState extends State<BasketViewBottomSheet> {
     for (var item in widget.basket) {
       amount += (item.price * item.menu.count);
     }
+  }
+
+  void onPaying() {
+    final OrderModel order = createOrder();
+    Navigator.pop(context);
+    Navigator.pushNamed(
+      context,
+      "/payment",
+      arguments: {
+        "order": order.toJson(),
+        "type": "order",
+      },
+    );
+    return;
+  }
+
+  List<DeliveryInfo> createDeliveryInfos() {
+    return widget.basket.map((b) => b.deliveryInfo).toList();
+  }
+
+  OrderModel createOrder() {
+    final deliveryInfos = createDeliveryInfos();
+    final amount = widget.basket
+        .fold(0, (prev, item) => prev += item.price * item.menu.count);
+    final user = context.read<UserBloc>().state.user!;
+    final storeId = context.read<StoreBloc>().state.selStore!.storeId;
+    final customData = PaymentCustomData.fromJson({
+      "type": "order",
+      "data": {
+        "storeId": storeId,
+        "orderInfo": {
+          "deliveryinfo": deliveryInfos,
+          "menus": widget.basket.map((e) => e.menu).toList(),
+        },
+      },
+    });
+    final menuname = widget.basket.length > 1
+        ? "${widget.basket[0].menu.name}외 ${widget.basket.length - 1}건"
+        : widget.basket[0].menu.name;
+
+    return OrderModel.fromJson({
+      "name": menuname,
+      "buyer_tel": user.tel!,
+      "buyer_email": user.email!,
+      "buyer_name": user.nickname!,
+      "custom_data": customData.toJson(),
+      "amount": amount,
+    });
   }
 
   @override
@@ -81,7 +137,7 @@ class _BasketViewBottomSheetState extends State<BasketViewBottomSheet> {
           RoundedButtonMedium(
             text: "주문하기",
             fontSize: 14,
-            onTab: () {},
+            onTab: onPaying,
           ),
         ],
       ),

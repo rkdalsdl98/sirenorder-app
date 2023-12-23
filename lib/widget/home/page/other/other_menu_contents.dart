@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/type/other_menu_content.dart';
-import 'package:sirenorder_app/widget/home/page/other/image_button.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 
 class OtherMenuContents extends StatelessWidget {
@@ -38,7 +37,7 @@ class OtherMenuContents extends StatelessWidget {
           ),
           SizedBox(height: 5 * getScaleHeight(context)),
           Column(
-            children: wrapContentHelper(contents),
+            children: wrapContentHelper(context, contents),
           ),
         ],
       ),
@@ -46,9 +45,11 @@ class OtherMenuContents extends StatelessWidget {
   }
 }
 
-List<Widget> wrapContentHelper(List<OtherMenuContent> contents) {
+List<Widget> wrapContentHelper(
+    BuildContext context, List<OtherMenuContent> contents) {
   List<Widget> wrapped = [];
   List<Widget> row = [];
+  double iconSize = 40;
   for (var content in contents) {
     if (row.length >= 2) {
       wrapped.add(Padding(
@@ -60,7 +61,22 @@ List<Widget> wrapContentHelper(List<OtherMenuContent> contents) {
       ));
       row = [];
     }
-    row.add(ImageButton(text: content.text, imageUrl: content.imageUrl));
+    row.add(InkWell(
+      onTap: content.onTab,
+      child: Row(
+        children: [
+          Image.asset(
+            content.imageUrl,
+            width: iconSize * getScaleWidth(context),
+            height: iconSize * getScaleHeight(context),
+          ),
+          Text(
+            content.text,
+            style: TextStyles.defaultStyle,
+          ),
+        ],
+      ),
+    ));
   }
 
   if (row.isNotEmpty) {
