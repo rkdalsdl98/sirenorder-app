@@ -4,6 +4,7 @@ import 'package:sirenorder_app/bloc/user/event/update_gift_event.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/model/subject.model.dart';
 import 'package:sirenorder_app/model/user_model.dart';
+import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 
 void showSnackBarMessage(
   BuildContext context,
@@ -12,7 +13,14 @@ void showSnackBarMessage(
   Future.delayed(Duration.zero).then(
     (_) => ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(
+          message,
+          style: TextStyles.defaultStyle.copyWith(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).colorScheme.background,
+          ),
+        ),
       ),
     ),
   );
@@ -30,6 +38,13 @@ void handleNotify(BuildContext context, SSESubject sses) {
         "${serverSubject.title}\n${serverSubject.message}",
       );
       break;
+    case "user-notify":
+      final userNotify = sses.subject as UserNotifySubject;
+      showSnackBarMessage(
+        context,
+        "${userNotify.title}\n${userNotify.message}",
+      );
+      break;
     case "gift-notify":
       final giftSubject = sses.subject as GiftNotifySubject;
       showSnackBarMessage(
@@ -40,6 +55,7 @@ void handleNotify(BuildContext context, SSESubject sses) {
       break;
     case "order-notify":
       final orderSubject = sses.subject as OrderNotifySubject;
+      print(orderSubject.state);
       _handleOrderStateMessage(context, orderSubject.state);
       break;
   }
@@ -57,7 +73,7 @@ _handleOrderStateMessage(BuildContext context, OrderState state) {
       showSnackBarMessage(context, "가게에서 주문을 거절하였습니다.");
       break;
     case OrderState.finish:
-      showSnackBarMessage(context, "주문요청 처리를 성공적으로 마무리 했습니다.");
+      showSnackBarMessage(context, "음료가 완성되었습니다.\n매장에서 픽업해주세요!");
       break;
   }
 }

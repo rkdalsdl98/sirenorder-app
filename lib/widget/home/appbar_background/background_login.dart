@@ -30,45 +30,30 @@ class BackgroundLogin extends StatelessWidget {
                     "교환하기 버튼을 통해 모아온\n스탬프를 쿠폰으로 교환 할 수 있습니다.\n",
                     textAlign: TextAlign.center,
                     style: TextStyles.defaultStyle.copyWith(
-                      fontSize: 6,
+                      fontSize: 8,
                     ),
                   ),
                   Text(
                     "교환된 쿠폰은 하단에 Other 탭\n혹은 쿠폰함 버튼을 통해\n확인 하실 수 있습니다.",
                     textAlign: TextAlign.center,
                     style: TextStyles.defaultStyle.copyWith(
-                      fontSize: 6,
+                      fontSize: 8,
                     ),
                   ),
                 ],
               ),
               SizedBox(
-                width: 60 * getScaleWidth(context),
+                width: 30 * getScaleWidth(context),
                 height: 100 * getScaleHeight(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RoundedButtonSmall(
-                      onTab: () {},
-                      text: "쿠\n폰\n함",
-                      fontSize: 10,
-                      backgroundColor: Theme.of(context).colorScheme.background,
-                      textColor: const Color(0xFF1CBA3E),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                    ),
-                    RoundedButtonSmall(
-                      onTab: () {},
-                      text: "교\n환\n하\n기",
-                      fontSize: 10,
-                      backgroundColor: Theme.of(context).colorScheme.background,
-                      textColor: const Color(0xFF1CBA3E),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                    ),
-                  ],
+                child: RoundedButtonSmall(
+                  onTab: () => Navigator.pushNamed(context, "/coupon"),
+                  text: "쿠\n폰\n함",
+                  fontSize: 10,
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  textColor: const Color(0xFF1CBA3E),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
                 ),
               ),
             ],

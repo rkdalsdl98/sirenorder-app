@@ -14,6 +14,9 @@ class SSESubject {
       case "main-notify":
         subject = ServerNotifySubject.fromJson(json['subject']);
         break;
+      case "user-notify":
+        subject = UserNotifySubject.fromJson(json['subject']);
+        break;
       case "gift-notify":
         subject = GiftNotifySubject.fromJson(json['subject']);
         break;
@@ -28,6 +31,16 @@ abstract class NofifySubject extends Equatable {}
 class ServerNotifySubject extends NofifySubject {
   late final String message, title;
   ServerNotifySubject.fromJson(Map<String, dynamic> json)
+      : message = json['message'],
+        title = json['title'];
+
+  @override
+  List<Object?> get props => [message, title];
+}
+
+class UserNotifySubject extends NofifySubject {
+  late final String message, title;
+  UserNotifySubject.fromJson(Map<String, dynamic> json)
       : message = json['message'],
         title = json['title'];
 

@@ -16,7 +16,6 @@ class UserModel extends Equatable {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     coupons = json['coupons'] ?? [];
-
     if (json['wallet'] != null) {
       wallet = Wallet.fromJson(json['wallet']);
     }
@@ -99,70 +98,81 @@ class GiftModel extends Equatable {
 }
 
 class OrderHistory extends Equatable {
-  String? uuid, storeId;
+  String? impUid, storeId, storeName, storeThumbnail, orderedAt;
   int? saleprice, totalprice;
   List<DeliveryInfo>? deliveryinfos;
   List<MenuInfo>? menus;
 
   OrderHistory.fromJson(Map<String, dynamic> json) {
-    uuid = json['uuid'];
+    impUid = json['imp_uid'];
     storeId = json['store_uid'];
+    storeName = json['store_name'];
+    storeThumbnail = json['store_thumbnail'];
     saleprice = json['saleprice'];
     totalprice = json['totalprice'];
+    orderedAt = json['order_date'];
     deliveryinfos = [];
     if (json['deliveryinfo'] != null) {
-      deliveryinfos =
-          json['deliveryinfo'].map((json) => DeliveryInfo.fromJson(json));
+      for (var info in json['deliveryinfo']) {
+        deliveryinfos!.add(DeliveryInfo.fromJson(info));
+      }
     }
 
     menus = [];
-    if (json['menus'] != null &&
-        (json['menus'] as List<Map<String, dynamic>>).isNotEmpty) {
-      for (var menu in (json['menus'] as List<Map<String, dynamic>>)) {
+    if (json['menus'] != null) {
+      for (var menu in json['menus']) {
         menus!.add(MenuInfo.fromJson(menu));
       }
     }
   }
 
   Map<String, dynamic> toJson() => {
-        "uuid": uuid,
+        "imp_uid": impUid,
+        "store_name": storeName,
+        "store_thumbnail": storeThumbnail,
         "store_uid": storeId,
         "saleprice": saleprice,
         "totalprice": totalprice,
+        "order_date": orderedAt,
         "deliveryinfo": deliveryinfos!.map<dynamic>((item) => item.toJson()),
         "menus": menus!.map((menu) => menu.toJson()),
       };
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+        menus?.length,
+        deliveryinfos?.length,
+        totalprice,
+        saleprice,
+        storeId,
+        impUid,
+        orderedAt,
+      ];
 }
 
 class MenuInfo {
-  String? name, thumbnail, size, bottle, tempture;
+  String? name, thumbnail, en_name;
   int? price, count;
 
-  MenuInfo.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        thumbnail = json['thumbnail'],
-        size = json['size'],
-        bottle = json['bottle'],
-        tempture = json['tempture'],
-        price = json['price'],
-        count = json['count'];
+  MenuInfo.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    thumbnail = json['thumbnail'];
+    en_name = json['en_name'];
+    price = json['price'];
+    count = json['count'];
+  }
   Map<String, dynamic> toJson() => {
         "name": name,
+        "en_name": en_name,
         "thumbnail": thumbnail,
-        "size": size,
-        "bottle": bottle,
-        "tempture": tempture,
         "price": price,
         "count": count,
       };
 }
 
 class CouponModel {
-  late final String code, menu_name;
-  late final DateTime expirationPeriod;
+  final String code, menu_name;
+  final DateTime expirationPeriod;
   String? thumbnail;
 
   CouponModel.fromJson(Map<String, dynamic> json)

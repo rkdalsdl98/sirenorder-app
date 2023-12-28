@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:sirenorder_app/bloc/notification/event/close_notifications_event.dart';
 import 'package:sirenorder_app/bloc/notification/event/listen_notifications_event.dart';
 import 'package:sirenorder_app/bloc/notification/event/notification_event.dart';
 import 'package:sirenorder_app/bloc/notification/event/sse_notify_event.dart';
@@ -51,6 +52,12 @@ class ListenNotificationsEventHandler extends NotificationEventHandler {
     }
   }
 
+  void _onError(
+    NotificationBloc bloc,
+  ) {
+    bloc.add(CloseNotificationsEvent("서버와 연결이 끊어졌습니다"));
+  }
+
   Future<SSEConnection> listen(
     String userEmail,
     NotificationBloc bloc,
@@ -69,7 +76,8 @@ class ListenNotificationsEventHandler extends NotificationEventHandler {
           .transform(unit8Transformer())
           .transform(const Utf8Decoder())
           .transform(const LineSplitter())
-          .listen((event) => _onData(event, bloc)),
+          .listen((event) => _onData(event, bloc))
+        ..onError((_) => _onError(bloc)),
     );
   }
 }

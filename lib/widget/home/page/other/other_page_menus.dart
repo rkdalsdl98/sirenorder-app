@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
-import 'package:sirenorder_app/widget/common/square_rounded_button.dart';
+import 'package:sirenorder_app/widget/common/square_rounded_icon_button.dart';
 
 class OtherPageMenus extends StatelessWidget {
   const OtherPageMenus({
@@ -20,12 +20,12 @@ class OtherPageMenus extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SquareRoundedButton(
+              SquareRoundedIconButton(
                 text: "스탬프 내역",
                 icondata: Icons.star_border_outlined,
                 iconSize: 50,
               ),
-              SquareRoundedButton(
+              SquareRoundedIconButton(
                 text: "개인정보 관리",
                 icondata: Icons.lock_outline,
                 iconSize: 45,
@@ -36,12 +36,12 @@ class OtherPageMenus extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SquareRoundedButton(
+              SquareRoundedIconButton(
                 text: "나만의 메뉴",
                 icondata: Icons.local_drink,
                 iconSize: 50,
               ),
-              SquareRoundedButton(
+              SquareRoundedIconButton(
                 text: "계정정보",
                 icondata: Icons.person_pin,
                 iconSize: 45,

@@ -12,20 +12,20 @@ import 'package:sirenorder_app/widget/menuinfo/menu_info_app_bar.dart';
 import 'package:sirenorder_app/widget/menuinfo/nutritions.dart';
 import 'package:sirenorder_app/widget/menuinfo/send_order.dart';
 
-class MenuInfo extends StatefulWidget {
+class MenuDetail extends StatefulWidget {
   final Map<String, dynamic> json;
   final String type;
-  const MenuInfo({
+  const MenuDetail({
     super.key,
     required this.json,
     required this.type,
   });
 
   @override
-  State<MenuInfo> createState() => _MenuInfoState();
+  State<MenuDetail> createState() => _MenuInfoState();
 }
 
-class _MenuInfoState extends State<MenuInfo> {
+class _MenuInfoState extends State<MenuDetail> {
   late final MenuModel menu;
   final ScrollController _scrollController = ScrollController();
   final double _toolbarHeight = 40;

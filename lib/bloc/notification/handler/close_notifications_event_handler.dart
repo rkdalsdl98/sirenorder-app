@@ -10,7 +10,7 @@ class CloseNotificationsEventHandler extends NotificationEventHandler {
     emit,
     NotificationEvent event,
     NotificationBlocState state,
-  ) {
+  ) async {
     if (event is! CloseNotificationsEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
@@ -19,6 +19,13 @@ class CloseNotificationsEventHandler extends NotificationEventHandler {
     }
 
     state.close();
-    emit(NotificationBlocIdleState(null, null));
+    emit(NotificationBlocCloseState(event.message, null, null));
+
+    await Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+      emit(NotificationBlocIdleState(
+        state.listener,
+        state.subject,
+      ));
+    });
   }
 }

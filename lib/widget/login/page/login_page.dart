@@ -98,7 +98,6 @@ class LoginPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Stack(
           children: [
-            if (isLoading) const LoadingIndicator(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -202,7 +201,8 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
+            if (isLoading) const LoadingIndicator(),
           ],
         ),
       ),

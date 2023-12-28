@@ -24,6 +24,13 @@ class NotificationBlocIdleState extends NotificationBlocState {
   List<Object?> get props => [listener];
 }
 
+class NotificationBlocCloseState extends NotificationBlocState {
+  String? message;
+  NotificationBlocCloseState(this.message, super.listener, super.subject);
+  @override
+  List<Object?> get props => [listener];
+}
+
 class NotificationBlocListeningState extends NotificationBlocState {
   NotificationBlocListeningState(super.listener, super.subject);
   @override

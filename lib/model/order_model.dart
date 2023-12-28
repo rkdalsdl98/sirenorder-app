@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:sirenorder_app/type/bloc/menu_type.dart';
 import 'package:sirenorder_app/type/order_state.dart';
 
@@ -45,7 +46,7 @@ class DeliveryInfo {
   final String memo, paymenttype, packagingMethod, size, tempture;
   final bool take;
 
-  DeliveryInfo(
+  const DeliveryInfo(
     this.memo,
     this.paymenttype,
     this.take,
@@ -55,7 +56,7 @@ class DeliveryInfo {
   );
 
   DeliveryInfo.fromJson(Map<String, dynamic> json)
-      : memo = json['memo'],
+      : memo = json['memo'] ?? "",
         take = json['take'],
         paymenttype = json['paymenttype'] ?? "card",
         size = json['size'],
@@ -116,6 +117,8 @@ class MenuModel {
         return MenuCategory.notdefined;
     }
   }
+
+  setMenuName(String newName) => name = newName;
 }
 
 class MenuDetailModel {

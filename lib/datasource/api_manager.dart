@@ -9,6 +9,8 @@ enum RequestRoute {
   login,
   order,
   coupon,
+  couponregister,
+  usecoupon,
   regist,
   publishcode,
   code,
@@ -23,8 +25,9 @@ enum RequestRoute {
 const Map<RequestRoute, String> routes = {
   RequestRoute.tokenlogin: "/user/login/token",
   RequestRoute.login: "/user/login",
-  RequestRoute.coupon: "/user/coupon",
-  RequestRoute.regist: "/user/regist",
+  RequestRoute.coupon: "/coupon",
+  RequestRoute.couponregister: "/coupon/register",
+  RequestRoute.regist: "/regist",
   RequestRoute.publishcode: "/user/regist/publish",
   RequestRoute.code: "/user/regist/verify",
   RequestRoute.order: "/store/order/send",
@@ -32,8 +35,9 @@ const Map<RequestRoute, String> routes = {
   RequestRoute.orderstate: "/store/order/state",
   RequestRoute.sse: "/sse/listen",
   RequestRoute.store: "/store",
+  RequestRoute.usecoupon: "/store/order/coupon",
   RequestRoute.storedetail: "/store/detail",
-  RequestRoute.menudetail: "/menu/detail"
+  RequestRoute.menudetail: "/menu/detail",
 };
 
 Future<Response> fetchGet(
@@ -73,7 +77,7 @@ Future<Response> fetchPost(
     receiveTimeout: const Duration(seconds: 120),
     maxRedirects: 0,
     headers: {
-      "Content-Type": "application/json;charset=UTF=8",
+      "Content-Type": "application/json",
       ...?headers,
     },
     queryParameters: queryParams,

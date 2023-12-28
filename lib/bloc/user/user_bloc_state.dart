@@ -37,13 +37,6 @@ class UserBlocLoadedState extends UserBlocState {
   List<Object?> get props => [user];
 }
 
-class UserBlocNotifyState extends UserBlocState {
-  UserBlocNotifyState(super.user);
-
-  @override
-  List<Object?> get props => [user];
-}
-
 class UserBlocErrorState extends UserBlocState {
   final BlocException exception;
   UserBlocErrorState(super.user, this.exception);

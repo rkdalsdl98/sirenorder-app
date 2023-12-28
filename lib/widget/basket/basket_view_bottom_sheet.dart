@@ -35,7 +35,19 @@ class _BasketViewBottomSheetState extends State<BasketViewBottomSheet> {
   }
 
   void onPaying() {
-    final OrderModel order = createOrder();
+    final user = context.read<UserBloc>().state.user;
+    if (user == null) {
+      showSnackBarMessage(
+        context,
+        "로그인 이후에 주문이 가능합니다.",
+      );
+      return;
+    }
+
+    final OrderModel? order = createOrder();
+    if (order == null) {
+      return;
+    }
     Navigator.pop(context);
     Navigator.pushNamed(
       context,
@@ -52,16 +64,23 @@ class _BasketViewBottomSheetState extends State<BasketViewBottomSheet> {
     return widget.basket.map((b) => b.deliveryInfo).toList();
   }
 
-  OrderModel createOrder() {
+  OrderModel? createOrder() {
     final deliveryInfos = createDeliveryInfos();
     final amount = widget.basket
-        .fold(0, (prev, item) => prev += item.price * item.menu.count);
+        .fold<int>(0, (prev, item) => prev += item.price * item.menu.count);
     final user = context.read<UserBloc>().state.user!;
-    final storeId = context.read<StoreBloc>().state.selStore!.storeId;
+    final store = context.read<StoreBloc>().state.selStore;
+    if (store == null) {
+      showSnackBarMessage(
+        context,
+        "주문을 요청할 가게를 선택해주세요.",
+      );
+      return null;
+    }
     final customData = PaymentCustomData.fromJson({
       "type": "order",
       "data": {
-        "storeId": storeId,
+        "storeId": store.storeId,
         "orderInfo": {
           "deliveryinfo": deliveryInfos,
           "menus": widget.basket.map((e) => e.menu).toList(),

@@ -140,7 +140,6 @@ class _StepTwoState extends State<StepTwo> {
       final isLoading = (state is RegistBlocLoadingState);
       if (state is RegistBlocErrorState) {
         if (!isAlertError) {
-          print(state.exception.type);
           showSnackBarMessage(context, state.exception.message);
         }
       } else if (state is RegistBlocLoadedState) {

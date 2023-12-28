@@ -67,7 +67,7 @@ class _GiftState extends State<Gift> {
 
     final bloc = context.read<UserBloc>();
     final user = bloc.state.user!;
-
+    menu.setMenuName("${menu.name} 교환권");
     // if (result["to"] == user.email) {
     //   showSnackBarMessage(
     //     context,

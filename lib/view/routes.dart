@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/view/basket.dart';
+import 'package:sirenorder_app/view/bills.dart';
+import 'package:sirenorder_app/view/coupon.dart';
 import 'package:sirenorder_app/view/gift.dart';
 import 'package:sirenorder_app/view/gift_box.dart';
 import 'package:sirenorder_app/view/gift_detail.dart';
@@ -22,7 +24,7 @@ Route<dynamic>? initGeneratedRoutes(
 
   switch (settings.name) {
     case '/':
-      return MaterialPageRoute(builder: (_) => Home(args: args));
+      return MaterialPageRoute(builder: (_) => const Home());
     case '/login':
       return MaterialPageRoute(
         builder: (routeContext) => RepositoryProvider.value(
@@ -63,7 +65,7 @@ Route<dynamic>? initGeneratedRoutes(
       return MaterialPageRoute(builder: (routeContext) => Store());
     case '/menu-info':
       return MaterialPageRoute(
-        builder: (routeContext) => MenuInfo(
+        builder: (routeContext) => MenuDetail(
           json: args['menu'],
           type: args['type'],
         ),
@@ -85,6 +87,23 @@ Route<dynamic>? initGeneratedRoutes(
           builder: (routeBuilder) => GiftDetail(
                 data: args['gift'],
               ));
+    case '/coupon':
+      return MaterialPageRoute(
+          builder: (routeContext) => RepositoryProvider.value(
+              value: routeContext.read<UserRepository>(),
+              child: BlocProvider.value(
+                  value: routeContext.read<UserBloc>(),
+                  child: const Coupon())));
+    case '/bills':
+      return MaterialPageRoute(
+        builder: (routeContext) => RepositoryProvider.value(
+          value: routeContext.read<UserRepository>(),
+          child: BlocProvider.value(
+            value: routeContext.read<UserBloc>(),
+            child: const Bills(),
+          ),
+        ),
+      );
     default:
       return null;
   }

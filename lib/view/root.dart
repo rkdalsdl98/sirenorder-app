@@ -5,7 +5,6 @@ import 'package:sirenorder_app/bloc/basket/basket_bloc.dart';
 import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
 import 'package:sirenorder_app/bloc/notification/notification_bloc.dart';
 import 'package:sirenorder_app/bloc/order/order_bloc.dart';
-import 'package:sirenorder_app/bloc/regist/regist_bloc.dart';
 import 'package:sirenorder_app/bloc/store/store_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/datasource/local_manager.dart';

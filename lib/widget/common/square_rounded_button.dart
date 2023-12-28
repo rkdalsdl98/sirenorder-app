@@ -4,53 +4,48 @@ import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 
 class SquareRoundedButton extends StatelessWidget {
   final String text;
-  final IconData icondata;
-  final double iconSize;
-  double height;
+  final double width;
+  final double height;
   void Function()? onTab;
   double? fontSize;
+  Color? fontColor;
+  Color? backgroundColor;
+  FontWeight? fontWeight;
 
   SquareRoundedButton({
     super.key,
     required this.text,
-    required this.icondata,
-    required this.iconSize,
-    this.height = 20,
+    required this.width,
+    required this.height,
     this.onTab,
-    this.fontSize,
+    this.fontSize = 12,
+    this.backgroundColor = Colors.blueGrey,
+    this.fontColor,
+    this.fontWeight,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.shadow.withOpacity(.25),
-            offset: const Offset(0, 2),
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      width: 140 * getScaleWidth(context),
-      height: 140 * getScaleHeight(context),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: height * getScaleHeight(context)),
-          Icon(
-            icondata,
-            color: const Color(0xFF1CBA3E),
-            size: iconSize * getScaleWidth(context),
-          ),
-          SizedBox(height: 5 * getScaleHeight(context)),
-          Text(
+    return InkWell(
+      onTap: onTab,
+      child: Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius:
+              BorderRadius.circular((15 / width) * (30 - (15 / width))),
+        ),
+        width: width * getScaleWidth(context),
+        height: height * getScaleHeight(context),
+        child: Center(
+          child: Text(
             text,
-            style: TextStyles.titleStyle.copyWith(fontSize: fontSize ?? 18),
+            style: TextStyles.titleStyle.copyWith(
+              fontSize: fontSize,
+              fontWeight: fontWeight,
+              color: fontColor,
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

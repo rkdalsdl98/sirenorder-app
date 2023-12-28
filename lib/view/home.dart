@@ -10,11 +10,7 @@ import 'package:sirenorder_app/widget/home/page/other_page.dart';
 import 'package:sirenorder_app/widget/home/page/pay_page.dart';
 
 class Home extends StatefulWidget {
-  Map<String, dynamic>? args;
-  Home({
-    super.key,
-    this.args,
-  });
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -38,6 +34,9 @@ class _HomeState extends State<Home> {
           builder: (_, state) {
         if (state is NotificationBlocReceiveState) {
           handleNotify(context, state.subject!);
+        } else if (state is NotificationBlocCloseState &&
+            state.message != null) {
+          showSnackBarMessage(context, state.message!);
         }
         return IndexedStack(
           index: currIndex,

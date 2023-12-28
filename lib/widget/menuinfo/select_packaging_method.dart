@@ -38,8 +38,10 @@ class _SelectPackagingMethodState extends State<SelectPackagingMethod> {
         } else {
           wrapHeight = comments[selectIndex]['height'];
         }
-        context.read<OrderBloc>().add(
-            UpsertDataEvent("packagingMethod", packagingMethods[selectIndex]));
+        context.read<OrderBloc>().add(UpsertDataEvent(
+              "packagingMethod",
+              packagingMethods[selectIndex],
+            ));
       });
   @override
   Widget build(BuildContext context) {

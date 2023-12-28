@@ -5,7 +5,7 @@ import 'package:sirenorder_app/bloc/notification/event/close_notifications_event
 import 'package:sirenorder_app/bloc/notification/event/listen_notifications_event.dart';
 import 'package:sirenorder_app/bloc/notification/event/notification_event.dart';
 import 'package:sirenorder_app/bloc/notification/event/sse_notify_event.dart';
-import 'package:sirenorder_app/bloc/notification/handler/close_notifications_event.dart';
+import 'package:sirenorder_app/bloc/notification/handler/close_notifications_event_handler.dart';
 import 'package:sirenorder_app/bloc/notification/handler/listen_notifications_event_handler.dart';
 import 'package:sirenorder_app/bloc/notification/handler/sse_notify_event_handler.dart';
 import 'package:sirenorder_app/bloc/notification/notification_state.dart';

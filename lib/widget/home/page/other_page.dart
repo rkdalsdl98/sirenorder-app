@@ -20,8 +20,21 @@ class OtherPage extends StatelessWidget {
   logout(BuildContext context) {
     final userBloc = context.read<UserBloc>();
     final notifyBloc = context.read<NotificationBloc>();
-    notifyBloc.add(CloseNotificationsEvent());
+    notifyBloc.add(CloseNotificationsEvent(null));
     userBloc.add(UserLogoutEvent());
+  }
+
+  navPushName(
+    BuildContext context, {
+    required String route,
+    Object? arguments,
+  }) {
+    final user = context.read<UserBloc>().state.user;
+    if (user == null) {
+      showSnackBarMessage(context, "로그인이 필요한 서비스 입니다.");
+      return;
+    }
+    Navigator.pushNamed(context, route, arguments: arguments);
   }
 
   @override
@@ -57,12 +70,7 @@ class OtherPage extends StatelessWidget {
                       OtherMenuContent(
                         "쿠폰 사용",
                         "assets/img/ticket.png",
-                        () {},
-                      ),
-                      OtherMenuContent(
-                        "쿠폰 내역",
-                        "assets/img/ticket.png",
-                        () {},
+                        () => navPushName(context, route: "/coupon"),
                       ),
                     ],
                   ),
@@ -72,19 +80,12 @@ class OtherPage extends StatelessWidget {
                       OtherMenuContent(
                         "선물함",
                         "assets/img/bag.png",
-                        () {
-                          final user = context.read<UserBloc>().state.user;
-                          if (user == null) {
-                            showSnackBarMessage(context, "로그인이 필요한 서비스 입니다.");
-                            return;
-                          }
-                          Navigator.pushNamed(context, "/gift-box");
-                        },
+                        () => navPushName(context, route: "/gift-box"),
                       ),
                       OtherMenuContent(
                         "구매 내역",
                         "assets/img/history.png",
-                        () {},
+                        () => navPushName(context, route: "/bills"),
                       ),
                     ],
                   ),
