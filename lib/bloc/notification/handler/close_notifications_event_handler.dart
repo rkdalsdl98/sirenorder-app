@@ -21,7 +21,7 @@ class CloseNotificationsEventHandler extends NotificationEventHandler {
     state.close();
     emit(NotificationBlocCloseState(event.message, null, null));
 
-    await Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+    await Future.delayed(event.messageDuration ?? Duration.zero).then((_) {
       emit(NotificationBlocIdleState(
         state.listener,
         state.subject,
