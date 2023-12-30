@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
+import 'package:sirenorder_app/widget/common/rounded_button_small.dart';
 
 class BackgrounNotLogin extends StatelessWidget {
   const BackgrounNotLogin({
@@ -32,49 +33,24 @@ class BackgrounNotLogin extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 60 * getScaleWidth(context),
-                    height: 20 * getScaleHeight(context),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(180),
-                      color: const Color(0xFF1CBA3E),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "회원가입",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.defaultStyle.copyWith(
-                          color: Theme.of(context).colorScheme.background,
-                          fontSize: 8,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                  RoundedButtonSmall(
+                    text: "회원가입",
+                    onTab: () => Navigator.pushNamed(
+                      context,
+                      "/login",
+                      arguments: {"page": 1},
                     ),
                   ),
-                  Container(
-                    width: 60 * getScaleWidth(context),
-                    height: 20 * getScaleHeight(context),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(180),
-                      color: Theme.of(context).colorScheme.background,
-                      border: Border.all(
-                        color: const Color(0xFF1CBA3E),
-                      ),
+                  RoundedButtonSmall(
+                    text: "로그인",
+                    backgroundColor: Theme.of(context).colorScheme.background,
+                    textColor: const Color(0xFF1CBA3E),
+                    onTab: () => Navigator.pushNamed(
+                      context,
+                      "/login",
+                      arguments: {"page": 0},
                     ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "로그인",
-                        textAlign: TextAlign.center,
-                        style: TextStyles.defaultStyle.copyWith(
-                          color: const Color(0xFF1CBA3E),
-                          fontSize: 8,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  )
+                  ),
                 ],
               )
             ],

@@ -1,16 +1,45 @@
-# sirenorder_app
+진행  
 
-A new Flutter project.
+홈 페이지별 UI 작성  
+로그인, 회원가입 UI 작성  
+회원가입 루틴 적용  
+회원가입 서버응답 처리  
+API 요청 루틴 작성  
+로그인/비로그인 별 페이지 보이기  
+결제 요청 페이지에 전달되어질 데이터 가공  
+결제 요청 처리 작성  
+주문현황 확인 루틴 작성  
+(주문현황확인 타이머가 멈추지 않던 현상 수정)  
+선물하기 전용 페이지 작성  
+결제결과를 하나의 페이지에 받고 페이지 전환하게끔 바꾸기  
+Sse 서버와 연동  
+서버와 연결상태가 불안정, 혹은 끊겼을 경우 Sse 연결 해제  
+알림 루틴 작성  
+주문상태 알림 루틴 새로 만들어진 루틴과 합치기  
+상점 불러오기  
+상점 상세정보 불러오기  
+주문가게 설정 루틴 작성  
+영양표 띄우기  
+주문 정보 띄우기   
+주문정보 받아서 저장하는 루틴 작성  
+매장선택에서 픽업 방식 넣기  
+장바구니에 담기 기능  
+메뉴 주문갯수 추가  
+장바구니 마무리  
+결제 루틴 변경된 사항에 맞춰서 적용하기  
+선물하기 결제 변경된 사항에 맞춰서 적용하기  
+장바구니 상품 결제 루틴 작성  
+쿠폰함 UI 작성  
+선물하기 구현  
+쿠폰등록 루틴 작성  
+쿠폰사용시 배달정보 기입할 수 있는 UI 작성  
+쿠폰사용 루틴 작성  
+주문내역에서 주문상세 UI 작성  
+주문내역에서 이전에 주문했던 매장과 메뉴로 재 주문 기능 작성  
+주문내역 구현  
+유저의 토큰이 유효하지 않다면 Sse서버와 연결을 끊고 로그아웃  
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+env파일에 환경변수가 없으면 로드시 오류가 나옴  
+주문알림 리스너 작성중, 하나의 이벤트에서 응답을 체크하고   상태를 변환하려다 보니  
+퓨처함수에 주기가 어긋나 이전 호출된 함수가 미처 종료되지   못하고 상태변경을 하는 경우가 발생,  
+해당 현상 방지를 위해 알림 이벤트를 등록하는곳과 블록의   상태를 변경하는 부분을 나누어서 처리했음  
