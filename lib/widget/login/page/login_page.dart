@@ -77,7 +77,10 @@ class LoginPage extends StatelessWidget {
       if (state is UserBlocLoadedState && state.user != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final notifyBloc = context.read<NotificationBloc>();
-          notifyBloc.add(ListenNotificationsEvent(state.user!.email!));
+          notifyBloc.add(ListenNotificationsEvent(
+            state.user!.email!,
+            state.user!.accesstoken!,
+          ));
           Navigator.pushNamedAndRemoveUntil(
             context,
             "/",

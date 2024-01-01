@@ -20,7 +20,7 @@ class OtherPage extends StatelessWidget {
   logout(BuildContext context) {
     final userBloc = context.read<UserBloc>();
     final notifyBloc = context.read<NotificationBloc>();
-    notifyBloc.add(CloseNotificationsEvent(null));
+    notifyBloc.add(CloseNotificationsEvent(null, Duration.zero));
     userBloc.add(UserLogoutEvent());
   }
 

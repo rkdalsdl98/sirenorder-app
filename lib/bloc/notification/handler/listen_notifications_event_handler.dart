@@ -30,7 +30,11 @@ class ListenNotificationsEventHandler extends NotificationEventHandler {
     }
 
     if (state.listener == null) {
-      final listener = await listen(event.userEmail, bloc);
+      final listener = await listen(
+        event.userEmail,
+        event.accessToken,
+        bloc,
+      );
       emit(NotificationBlocListeningState(listener, state.subject));
     }
   }
@@ -55,14 +59,21 @@ class ListenNotificationsEventHandler extends NotificationEventHandler {
   void _onError(
     NotificationBloc bloc,
   ) {
-    bloc.add(CloseNotificationsEvent("서버와 연결이 끊어졌습니다"));
+    bloc.add(CloseNotificationsEvent(
+      "서버와 연결이 끊어졌습니다\n정상적인 사용을 위해 재 로그인 해주세요",
+      const Duration(milliseconds: 100),
+    ));
   }
 
   Future<SSEConnection> listen(
     String userEmail,
+    String token,
     NotificationBloc bloc,
   ) async {
-    final sseRes = await sse(queryParams: {"listener_email": userEmail});
+    final sseRes = await sse(
+      queryParams: {"listener_email": userEmail},
+      headers: {"authorization": "Bearer $token"},
+    );
     final stream = sseRes.rs.data?.stream;
     if (stream == null) {
       throw BlocException(
