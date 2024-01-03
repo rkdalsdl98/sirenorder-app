@@ -4,6 +4,7 @@ import 'package:sirenorder_app/bloc/basket/basket_bloc.dart';
 import 'package:sirenorder_app/bloc/basket/basket_bloc_state.dart';
 import 'package:sirenorder_app/bloc/basket/event/showed_error_event.dart';
 import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 import 'package:sirenorder_app/system/methods.dart';
@@ -13,16 +14,20 @@ import 'package:sirenorder_app/widget/common/rounded_button_small.dart';
 class SendOrderModalBottomNav extends StatefulWidget {
   final void Function() incrementCount;
   final void Function() decrementCount;
-  final void Function() onPaying;
+  final void Function(int point) onPaying;
   final void Function() onPutMenu;
   final int count;
+  final int price;
+  final bool usePoint;
   const SendOrderModalBottomNav({
     super.key,
     required this.decrementCount,
     required this.incrementCount,
     required this.count,
+    required this.price,
     required this.onPaying,
     required this.onPutMenu,
+    required this.usePoint,
   });
 
   @override
@@ -33,7 +38,11 @@ class SendOrderModalBottomNav extends StatefulWidget {
 class _SendOrderModalBottomNavState extends State<SendOrderModalBottomNav> {
   @override
   Widget build(BuildContext context) {
-    final int price = context.read<MenuBloc>().state.detail?.price ?? 0;
+    final user = context.read<UserBloc>().state.user!;
+    final int price = widget.count * widget.price;
+    final int point = widget.usePoint
+        ? (price < user.wallet!.point! ? price : user.wallet!.point!)
+        : 0;
     return BlocBuilder<BasketBloc, BasketBlocState>(
         builder: (blocContext, state) {
       if (state is BasketBlocErrorState) {
@@ -78,7 +87,7 @@ class _SendOrderModalBottomNavState extends State<SendOrderModalBottomNav> {
                   incrementCount: widget.incrementCount,
                 ),
                 Text(
-                  "${addComma(widget.count * price)}원",
+                  "${addComma(price - point)}원",
                   style: TextStyles.titleStyle.copyWith(
                     fontSize: 24,
                     fontWeight: FontWeight.w500,
@@ -102,7 +111,7 @@ class _SendOrderModalBottomNavState extends State<SendOrderModalBottomNav> {
                 SizedBox(width: 10 * getScaleWidth(blocContext)),
                 RoundedButtonSmall(
                   text: "주문하기",
-                  onTab: widget.onPaying,
+                  onTab: () => widget.onPaying(point),
                   padding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 50),
                   fontSize: 14,

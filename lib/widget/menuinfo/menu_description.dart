@@ -8,6 +8,7 @@ import 'package:sirenorder_app/widget/menuinfo/select_tempture.dart';
 
 class MenuDescription extends StatelessWidget {
   String? en_name;
+  int? price;
   MenuDetailModel? detail;
   MenuCategory? category;
   MenuDescription({
@@ -15,6 +16,7 @@ class MenuDescription extends StatelessWidget {
     this.category,
     this.detail,
     this.en_name,
+    this.price,
   });
 
   @override
@@ -42,7 +44,7 @@ class MenuDescription extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text(
-                addComma(detail?.price ?? 0),
+                addComma(price ?? 0),
                 style: TextStyles.titleStyle,
               ),
             ),

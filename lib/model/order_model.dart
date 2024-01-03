@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:equatable/equatable.dart';
 import 'package:sirenorder_app/type/bloc/menu_type.dart';
 import 'package:sirenorder_app/type/order_state.dart';
 
@@ -75,7 +74,7 @@ class DeliveryInfo {
 
 class MenuModel {
   late String name, en_name, thumbnail;
-  late int detailId;
+  late int detailId, price;
   late MenuCategory category;
   int count = 1;
 
@@ -86,6 +85,7 @@ class MenuModel {
     this.en_name,
     this.thumbnail,
     this.detailId,
+    this.price,
   );
 
   MenuModel.fromJson(Map<String, dynamic> json) {
@@ -94,6 +94,7 @@ class MenuModel {
     thumbnail = json['thumbnail'];
     category = convertCategory(json['category']);
     detailId = json['detailId'];
+    price = json['price'];
   }
 
   Map<String, dynamic> toJson() => {
@@ -103,6 +104,7 @@ class MenuModel {
         "thumbnail": thumbnail,
         "detailId": detailId,
         "count": count,
+        "price": price,
       };
 
   MenuCategory convertCategory(dynamic data) {
@@ -124,20 +126,17 @@ class MenuModel {
 class MenuDetailModel {
   String? description;
   late final List<dynamic> allergys, nutritions;
-  late final int price;
 
   MenuDetailModel(
     this.description,
     this.allergys,
     this.nutritions,
-    this.price,
   );
 
   MenuDetailModel.fromJson(Map<String, dynamic> json) {
     description = json['description'];
     allergys = [];
     nutritions = [];
-    price = json['price'];
 
     if (json['allergys'] != null) {
       for (var allergy in json['allergys']) {

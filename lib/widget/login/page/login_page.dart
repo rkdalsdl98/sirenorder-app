@@ -16,18 +16,25 @@ import 'package:sirenorder_app/widget/login/page/regist/finders.dart';
 
 import '../../../system/system_message.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   final void Function(int index) onChangePage;
   final UserBlocState state;
 
-  LoginPage({
+  const LoginPage({
     super.key,
     required this.onChangePage,
     required this.state,
   });
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   Map<String, dynamic> result = {};
+
   bool isLoading = false;
 
   void login(BuildContext context) {
@@ -71,29 +78,30 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (state is UserBlocLoadingState) {
-      isLoading = true;
-    } else {
-      if (state is UserBlocLoadedState && state.user != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.state is UserBlocLoadingState) {
+        isLoading = true;
+      } else {
+        if (widget.state is UserBlocLoadedState && widget.state.user != null) {
           final notifyBloc = context.read<NotificationBloc>();
           notifyBloc.add(ListenNotificationsEvent(
-            state.user!.email!,
-            state.user!.accesstoken!,
+            widget.state.user!.email!,
+            widget.state.user!.accesstoken!,
           ));
-          Navigator.pushNamedAndRemoveUntil(
+          Navigator.pushReplacementNamed(
             context,
             "/",
-            (_) => false,
           );
-        });
-      } else if (state is UserBlocErrorState && isLoading) {
-        var err = state as UserBlocErrorState;
-        print(err.exception.type);
-        showSnackBarMessage(context, err.exception.message);
+          return;
+        } else if (widget.state is UserBlocErrorState && isLoading) {
+          var err = widget.state as UserBlocErrorState;
+          showSnackBarMessage(context, err.exception.message);
+        }
+        isLoading = false;
       }
-      isLoading = false;
-    }
+      setState(() {});
+    });
+
     return InkWell(
       radius: 0,
       highlightColor: Theme.of(context).colorScheme.background,
@@ -182,7 +190,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: 15 * getScaleHeight(context)),
                       Finders(
-                        onChangePage: onChangePage,
+                        onChangePage: widget.onChangePage,
                       ),
                       const Spacer(),
                       Container(

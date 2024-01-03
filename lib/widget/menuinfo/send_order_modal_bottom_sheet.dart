@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/basket/basket_bloc.dart';
 import 'package:sirenorder_app/bloc/basket/event/put_menu_event.dart';
-import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
 import 'package:sirenorder_app/bloc/order/event/upsert_data_event.dart';
 import 'package:sirenorder_app/bloc/order/order_bloc.dart';
 import 'package:sirenorder_app/bloc/store/store_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
 import 'package:sirenorder_app/model/basket_item_model.dart';
 import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
+import 'package:sirenorder_app/system/methods.dart';
 import 'package:sirenorder_app/system/system_message.dart';
 import 'package:sirenorder_app/type/order_state.dart';
 import 'package:sirenorder_app/widget/common/input_form.dart';
+import 'package:sirenorder_app/widget/common/square_rounded_button.dart';
+import 'package:sirenorder_app/widget/menuinfo/alert_stars_over_message.dart';
 import 'package:sirenorder_app/widget/menuinfo/select_packaging_method.dart';
 import 'package:sirenorder_app/widget/menuinfo/select_size.dart';
 import 'package:sirenorder_app/widget/menuinfo/send_order_modal_bottom_nav.dart';
@@ -34,6 +37,8 @@ class SendOrderModalBottomSheet extends StatefulWidget {
 
 class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
   int selectSizeIndex = -1;
+  bool usePoint = false;
+  bool isShowError = false;
   String selectSize = "Short";
   Map<String, dynamic> result = {};
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -50,7 +55,7 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
       });
   void onUpdateResult(String key, dynamic data) => result[key] = data;
 
-  void onPaying() {
+  void onPaying(int point) async {
     final form = _formkey.currentState;
     if (form == null) {
       showSnackBarMessage(
@@ -60,20 +65,34 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
       return;
     }
     form.save();
-    OrderModel? order = createOrder();
+    final stars = context.read<UserBloc>().state.user!.wallet!.stars!;
+    if (stars >= 3) {
+      final allow = await allowOverIncreaseStamp();
+      if (allow == null || !allow) {
+        return;
+      }
+    }
+
+    OrderModel? order = createOrder(point);
     if (order == null) {
       return;
     }
-    Navigator.pop(context);
-    Navigator.pushNamed(
-      context,
-      "/payment",
+    navPushNamed(
+      route: "/payment",
       arguments: {
         "order": order.toJson(),
         "type": "order",
       },
     );
     return;
+  }
+
+  navPushNamed({
+    required String route,
+    Object? arguments,
+  }) {
+    Navigator.pop(context);
+    Navigator.pushNamed(context, route, arguments: arguments);
   }
 
   void onPutMenu() {
@@ -90,12 +109,26 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
       );
       return;
     }
+
     form.save();
     BasketItemModel? item = createBasketItem();
     if (item == null) {
       return;
     }
     context.read<BasketBloc>().add(PutMenuEvent(item));
+  }
+
+  Future<bool?> allowOverIncreaseStamp() async {
+    return await showDialog<bool?>(
+      context: context,
+      builder: (builderContext) => const AlertStarsOverMessage(),
+    ).then((value) {
+      if (value == null) {
+        return value;
+      }
+      Navigator.pop(context);
+      return value;
+    });
   }
 
   DeliveryInfo? createDeliveryInfo() {
@@ -116,7 +149,6 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
   }
 
   BasketItemModel? createBasketItem() {
-    final price = context.read<MenuBloc>().state.detail!.price;
     final deliveryInfo = createDeliveryInfo();
     if (deliveryInfo == null) {
       return null;
@@ -124,18 +156,16 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
     BasketItemModel item = BasketItemModel(
       deliveryInfo,
       widget.menu,
-      price,
     );
     return item;
   }
 
-  OrderModel? createOrder() {
+  OrderModel? createOrder(int point) {
     final deliveryInfo = createDeliveryInfo();
     if (deliveryInfo == null) {
       return null;
     }
-    final amount =
-        context.read<MenuBloc>().state.detail!.price * widget.menu.count;
+    final amount = widget.menu.price * widget.menu.count;
     final user = context.read<UserBloc>().state.user!;
     final storeId = context.read<StoreBloc>().state.selStore!.storeId;
     final customData = PaymentCustomData.fromJson({
@@ -145,6 +175,7 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
         "orderInfo": {
           "deliveryinfo": [deliveryInfo],
           "menus": [widget.menu],
+          "point": point,
         },
       },
     });
@@ -161,6 +192,7 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.read<UserBloc>().state.user!;
     return InkWell(
       radius: 0,
       highlightColor: Colors.transparent,
@@ -211,6 +243,46 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 20,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: "사용가능한 포인트  ",
+                              style:
+                                  TextStyles.titleStyle.copyWith(fontSize: 12),
+                              children: [
+                                TextSpan(
+                                  text: "${addComma(user.wallet!.point!)} P",
+                                  style: const TextStyle(
+                                      color: Color(0xFF1CBA3E), fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: SquareRoundedButton(
+                              text: "모두사용",
+                              onTab: () => setState(() {
+                                usePoint = !usePoint;
+                              }),
+                              width: 60,
+                              height: 20,
+                              fontSize: 10,
+                              backgroundColor: const Color(0xFF1CBA3E),
+                              fontColor:
+                                  Theme.of(context).colorScheme.background,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SelectSize(
                       selectSizeIndex: selectSizeIndex,
                       onSelectSize: onSelectSize,
@@ -235,8 +307,10 @@ class _SendOrderModalBottomSheetState extends State<SendOrderModalBottomSheet> {
               incrementCount: incrementCount,
               decrementCount: decrementCount,
               count: widget.menu.count,
+              usePoint: usePoint,
               onPaying: onPaying,
               onPutMenu: onPutMenu,
+              price: widget.menu.price,
             ),
           ],
         ),

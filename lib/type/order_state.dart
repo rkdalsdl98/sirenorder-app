@@ -60,14 +60,17 @@ class OrderCustomData {
 class OrderInfo {
   late final List<dynamic> menus;
   late final List<dynamic> deliveryInfos;
+  int? point;
 
   OrderInfo(
     this.deliveryInfos,
     this.menus,
+    this.point,
   );
   OrderInfo.fromJson(Map<String, dynamic> json) {
     menus = [];
     deliveryInfos = [];
+    point = json['point'];
     if (json['deliveryinfo'] != null) {
       for (var info in json['deliveryinfo']) {
         deliveryInfos.add(info);
@@ -84,6 +87,7 @@ class OrderInfo {
   Map<String, dynamic> toJson() => {
         "menus": menus,
         "deliveryinfo": deliveryInfos,
+        "point": point,
       };
 }
 

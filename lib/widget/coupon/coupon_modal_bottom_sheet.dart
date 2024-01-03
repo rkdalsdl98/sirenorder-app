@@ -63,7 +63,7 @@ class _CouponModalBottomSheetState extends State<CouponModalBottomSheet> {
     }
     return DeliveryInfo(
       result['memo'] ?? "",
-      "card",
+      "coupon",
       data['take'],
       data['packagingMethod'],
       data['tempture'] ?? "HOT",

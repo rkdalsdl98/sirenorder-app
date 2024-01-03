@@ -36,6 +36,9 @@ class _PaymentState extends State<Payment> {
   @override
   Widget build(BuildContext context) {
     String orderId = 'mid_${DateTime.now().millisecondsSinceEpoch}';
+    int point = order.customData?.type == "gift"
+        ? 0
+        : (order.customData?.data.info.point ?? 0);
     return order.amount <= 0
         ? const Center(child: Text("잘못된 접근입니다."))
         : ((storeCode == null) || (kakaopayCode == null)
@@ -48,7 +51,7 @@ class _PaymentState extends State<Payment> {
                   payMethod: 'card', // 결제수단
                   name: order.menuname, // 주문명
                   merchantUid: orderId, // 주문번호
-                  amount: order.amount, // 결제금액
+                  amount: order.amount - point, // 결제금액
                   customData: order.customData == null
                       ? null
                       : {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sirenorder_app/bloc/store/store_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/model/order_model.dart';
 import 'package:sirenorder_app/model/user_model.dart';
@@ -38,6 +37,7 @@ class BillItem extends StatelessWidget {
     if (order == null) {
       return;
     }
+
     Navigator.pushNamed(
       context,
       "/payment",
@@ -55,7 +55,6 @@ class BillItem extends StatelessWidget {
       showSnackBarMessage(context, "주문정보를 불러 올 수 없어 요청이 취소되었습니다.");
       return null;
     }
-
     final amount =
         history.menus?.fold<int>(0, (prev, menu) => prev += menu.price ?? 0);
     final user = context.read<UserBloc>().state.user!;
@@ -69,7 +68,7 @@ class BillItem extends StatelessWidget {
         },
       },
     });
-
+    print(amount);
     return OrderModel.fromJson({
       "name": orderName,
       "buyer_tel": user.tel!,
@@ -82,7 +81,7 @@ class BillItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MenuInfo? firstMenu = history.menus![0];
+    MenuModel? firstMenu = history.menus![0];
     DeliveryInfo? firstInfo = history.deliveryinfos?[0];
     String historyName = history.menus!.length > 1
         ? "${firstMenu.name ?? ""} 외 ${history.menus!.length - 1}개의 메뉴"
@@ -128,7 +127,7 @@ class BillItem extends StatelessWidget {
                     ? BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(
-                            history.menus![0].thumbnail!,
+                            history.menus![0].thumbnail,
                           ),
                           fit: BoxFit.cover,
                         ),

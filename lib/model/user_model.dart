@@ -99,9 +99,10 @@ class GiftModel extends Equatable {
 
 class OrderHistory extends Equatable {
   String? impUid, storeId, storeName, storeThumbnail, orderedAt;
-  int? saleprice, totalprice;
+  int? saleprice;
+  dynamic totalprice;
   List<DeliveryInfo>? deliveryinfos;
-  List<MenuInfo>? menus;
+  List<MenuModel>? menus;
 
   OrderHistory.fromJson(Map<String, dynamic> json) {
     impUid = json['imp_uid'];
@@ -121,7 +122,7 @@ class OrderHistory extends Equatable {
     menus = [];
     if (json['menus'] != null) {
       for (var menu in json['menus']) {
-        menus!.add(MenuInfo.fromJson(menu));
+        menus!.add(MenuModel.fromJson(menu));
       }
     }
   }
@@ -148,26 +149,6 @@ class OrderHistory extends Equatable {
         impUid,
         orderedAt,
       ];
-}
-
-class MenuInfo {
-  String? name, thumbnail, en_name;
-  int? price, count;
-
-  MenuInfo.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    thumbnail = json['thumbnail'];
-    en_name = json['en_name'];
-    price = json['price'];
-    count = json['count'];
-  }
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "en_name": en_name,
-        "thumbnail": thumbnail,
-        "price": price,
-        "count": count,
-      };
 }
 
 class CouponModel {

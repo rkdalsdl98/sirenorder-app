@@ -99,6 +99,7 @@ class _MenuInfoState extends State<MenuDetail> {
                         category: menu.category,
                         en_name: menu.en_name,
                         detail: state.detail,
+                        price: menu.price,
                       ),
                       // 상품 영양 표
                       Nutritions(

@@ -93,7 +93,7 @@ class _BasketItemState extends State<BasketItem> {
           BasketItemInfo(
             info: widget.item.deliveryInfo,
             menu: widget.item.menu,
-            price: widget.item.price,
+            price: widget.item.menu.price,
             incrementCount: incrementCount,
             decrementCount: decrementCount,
           ),

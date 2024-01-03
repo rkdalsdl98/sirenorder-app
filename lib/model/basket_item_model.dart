@@ -4,17 +4,14 @@ import 'package:sirenorder_app/model/order_model.dart';
 class BasketItemModel extends Equatable {
   final DeliveryInfo deliveryInfo;
   final MenuModel menu;
-  final int price;
-  const BasketItemModel(this.deliveryInfo, this.menu, this.price);
+  const BasketItemModel(this.deliveryInfo, this.menu);
 
   BasketItemModel.fromJson(Map<String, dynamic> json)
       : deliveryInfo = DeliveryInfo.fromJson(json['deliveryinfo']),
-        menu = MenuModel.fromJson(json['menu']),
-        price = json['price'];
+        menu = MenuModel.fromJson(json['menu']);
   Map<String, dynamic> toJson() => {
         "deliveryinfo": deliveryInfo.toJson(),
         "menu": menu.toJson(),
-        "price": price,
       };
 
   @override

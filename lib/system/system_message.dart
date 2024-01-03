@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/user/event/update_gift_event.dart';
+import 'package:sirenorder_app/bloc/user/event/update_user_event.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/model/subject.model.dart';
 import 'package:sirenorder_app/model/user_model.dart';
@@ -55,7 +56,14 @@ void handleNotify(BuildContext context, SSESubject sses) {
       break;
     case "order-notify":
       final orderSubject = sses.subject as OrderNotifySubject;
-      print(orderSubject.state);
+      final state = orderSubject.state;
+      if (state == OrderState.finish) {
+        context.read<UserBloc>().add(UpdateUserEvent(
+              orderSubject.increasePoint ?? 0,
+              orderSubject.increaseStars ?? 0,
+              orderSubject.history!,
+            ));
+      }
       _handleOrderStateMessage(context, orderSubject.state);
       break;
   }

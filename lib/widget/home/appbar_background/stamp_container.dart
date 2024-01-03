@@ -1,4 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
 
@@ -33,52 +37,33 @@ class StampContainer extends StatelessWidget {
               ),
             ],
           ),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/img/stamp_deactive.png",
-                    width: stampSize * getScaleWidth(context),
-                    height: stampSize * getScaleHeight(context),
-                  ),
-                  Image.asset(
-                    "assets/img/stamp_deactive.png",
-                    width: stampSize * getScaleWidth(context),
-                    height: stampSize * getScaleHeight(context),
-                  ),
-                  Image.asset(
-                    "assets/img/stamp_deactive.png",
-                    width: stampSize * getScaleWidth(context),
-                    height: stampSize * getScaleHeight(context),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/img/stamp_deactive.png",
-                    width: stampSize * getScaleWidth(context),
-                    height: stampSize * getScaleHeight(context),
-                  ),
-                  Image.asset(
-                    "assets/img/stamp_deactive.png",
-                    width: stampSize * getScaleWidth(context),
-                    height: stampSize * getScaleHeight(context),
-                  ),
-                  Image.asset(
-                    "assets/img/stamp_deactive.png",
-                    width: stampSize * getScaleWidth(context),
-                    height: stampSize * getScaleHeight(context),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          stampWrapHelper(context, stampSize),
         ],
       ),
     );
   }
+}
+
+Widget stampWrapHelper(BuildContext context, double size) {
+  int stars = context.read<UserBloc>().state.user!.wallet!.stars!;
+  List<Widget> col = [];
+  List<Widget> row = [];
+  int count = 0;
+  for (int i = 0; i <= 6; ++i) {
+    if (count == 3) {
+      col.add(Row(children: row));
+      count = 0;
+      row = [];
+    }
+    row.add(Image.asset(
+      stars > 0
+          ? "assets/img/stamp_active.png"
+          : "assets/img/stamp_deactive.png",
+      width: size * getScaleWidth(context),
+      height: size * getScaleHeight(context),
+    ));
+    --stars;
+    ++count;
+  }
+  return Column(children: col);
 }

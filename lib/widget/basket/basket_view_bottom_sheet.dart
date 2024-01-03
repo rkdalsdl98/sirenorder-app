@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sirenorder_app/bloc/menu/menu_bloc.dart';
-import 'package:sirenorder_app/bloc/order/order_bloc.dart';
 import 'package:sirenorder_app/bloc/store/store_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/common/textstyles.dart' as TextStyles;
@@ -30,7 +28,7 @@ class _BasketViewBottomSheetState extends State<BasketViewBottomSheet> {
   void calAmount() {
     amount = 0;
     for (var item in widget.basket) {
-      amount += (item.price * item.menu.count);
+      amount += (item.menu.price * item.menu.count);
     }
   }
 
@@ -66,8 +64,8 @@ class _BasketViewBottomSheetState extends State<BasketViewBottomSheet> {
 
   OrderModel? createOrder() {
     final deliveryInfos = createDeliveryInfos();
-    final amount = widget.basket
-        .fold<int>(0, (prev, item) => prev += item.price * item.menu.count);
+    final amount = widget.basket.fold<int>(
+        0, (prev, item) => prev += item.menu.price * item.menu.count);
     final user = context.read<UserBloc>().state.user!;
     final store = context.read<StoreBloc>().state.selStore;
     if (store == null) {

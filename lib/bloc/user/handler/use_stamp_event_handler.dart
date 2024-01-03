@@ -1,14 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:sirenorder_app/bloc/user/event/use_coupon_event.dart';
+import 'package:sirenorder_app/bloc/user/event/use_stamp_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
 import 'package:sirenorder_app/datasource/api_manager.dart';
 import 'package:sirenorder_app/model/response_model.dart';
+import 'package:sirenorder_app/model/user_model.dart';
 import 'package:sirenorder_app/respository/user_repository.dart';
 import 'package:sirenorder_app/type/bloc/bloc_error_type.dart';
 
-class UseCouponEventHandler extends UserEventHandler {
+class UseStampEventHandler extends UserEventHandler {
   @override
   handleEvent(
     emit,
@@ -16,14 +17,15 @@ class UseCouponEventHandler extends UserEventHandler {
     UserBlocState state, {
     UserRepository? repository,
   }) async {
-    if (event is! UseCouponEvent) {
+    if (event is! UseStampEvent) {
       throw BlocException(
         "올바른 요청이 아닙니다.",
         ExceptionType.StateException,
       );
     }
+
     emit(UserBlocLoadingState(state.user));
-    final res = await _useCoupon(event, state.user!.email!);
+    final res = await _sendRequest(state.user!.accesstoken!);
     if (res.data['message'] != null) {
       final failed = FailedResponse.fromJson(res.data);
       throw BlocException(failed.message, ExceptionType.APIException);
@@ -37,32 +39,17 @@ class UseCouponEventHandler extends UserEventHandler {
       );
     }
 
-    final data = success.data as Map<String, dynamic>;
-    bool result = data['result'] as bool;
-    String? message = data['message'];
-    if (!result) {
-      emit(UserBlocLoadedState(state.user));
-      throw BlocException(
-        message!,
-        ExceptionType.APIException,
-      );
-    }
-    state.user!.coupons!
-        .removeWhere((coupon) => coupon["code"] == event.coupon.code);
+    final coupon = CouponModel.fromJson(success.data);
+    state.user!.coupons!.add(coupon.toJson());
+    state.user!.wallet!.stars = 0;
     emit(UserBlocLoadedState(state.user));
   }
 
-  Future<Response> _useCoupon(
-    UseCouponEvent event,
-    String email,
-  ) async {
+  Future<Response> _sendRequest(String token) async {
     return await fetchPost(
-      RequestRoute.usecoupon,
-      body: {
-        "user_email": email,
-        "code": event.coupon.code,
-        "storeId": event.storeId,
-        "deliveryinfo": event.deliveryinfo,
+      RequestRoute.stamp,
+      headers: {
+        "authorization": "Bearer $token",
       },
     );
   }

@@ -9,21 +9,6 @@ import 'package:sirenorder_app/system/methods.dart';
 class PayPage extends StatelessWidget {
   const PayPage({super.key});
 
-  Widget showUserPoint(String point) {
-    return RichText(
-      text: TextSpan(
-        text: "사용가능한 포인트 ",
-        style: TextStyles.titleStyle.copyWith(fontSize: 12),
-        children: [
-          TextSpan(
-            text: "$point P",
-            style: const TextStyle(color: Color(0xFF1CBA3E)),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

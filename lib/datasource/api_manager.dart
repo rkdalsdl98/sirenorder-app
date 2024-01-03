@@ -8,6 +8,7 @@ enum RequestRoute {
   tokenlogin,
   login,
   order,
+  stamp,
   coupon,
   couponregister,
   usecoupon,
@@ -38,6 +39,7 @@ const Map<RequestRoute, String> routes = {
   RequestRoute.usecoupon: "/store/order/coupon",
   RequestRoute.storedetail: "/store/detail",
   RequestRoute.menudetail: "/menu/detail",
+  RequestRoute.stamp: "/coupon/publish/stamp"
 };
 
 Future<Response> fetchGet(

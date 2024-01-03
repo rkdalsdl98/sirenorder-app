@@ -40,6 +40,7 @@ class ServerNotifySubject extends NofifySubject {
 
 class UserNotifySubject extends NofifySubject {
   late final String message, title;
+
   UserNotifySubject.fromJson(Map<String, dynamic> json)
       : message = json['message'],
         title = json['title'];
@@ -59,8 +60,15 @@ class GiftNotifySubject extends NofifySubject {
 
 class OrderNotifySubject extends NofifySubject {
   late final OrderState state;
+  int? increasePoint, increaseStars;
+  OrderHistory? history;
   OrderNotifySubject.fromJson(Map<String, dynamic> json) {
     final String stateStr = json['order_state'];
+    increasePoint = json['increase_point'];
+    increaseStars = json['increase_stars'];
+    if (json['history'] != null) {
+      history = OrderHistory.fromJson(json['history']);
+    }
     switch (stateStr) {
       case "wait":
         state = OrderState.wait;

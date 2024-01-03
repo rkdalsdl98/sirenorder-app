@@ -28,17 +28,15 @@ class InitializeEventHandler extends BasketEventHandler {
     emit(BasketBlocLoadingState(
       state.basket,
     ));
-    await Future.delayed(const Duration(milliseconds: 1000)).then((_) async {
+    await Future.delayed(Duration.zero).then((_) async {
       var list = await repository.getBasketItems();
       if (list != null) {
         final basket = list
             .map<BasketItemModel>((json) => BasketItemModel.fromJson(json))
             .toList();
-        emit(
-          BasketBlocLoadedState(basket),
-        );
+        emit(BasketBlocLoadedState(basket));
       } else {
-        BasketBlocLoadedState(state.basket);
+        emit(BasketBlocLoadedState(state.basket));
       }
     });
   }

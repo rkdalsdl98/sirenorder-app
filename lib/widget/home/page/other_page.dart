@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sirenorder_app/bloc/notification/event/close_notifications_event.dart';
 import 'package:sirenorder_app/bloc/notification/notification_bloc.dart';
+import 'package:sirenorder_app/bloc/user/event/use_stamp_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_logout_event.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
@@ -13,6 +14,7 @@ import 'package:sirenorder_app/widget/common/rounded_button_medium.dart';
 import 'package:sirenorder_app/widget/home/page/other/other_menu_contents.dart';
 import 'package:sirenorder_app/widget/home/page/other/other_page_menus.dart';
 import 'package:sirenorder_app/widget/home/page/other/other_service.dart';
+import 'package:sirenorder_app/widget/home/page/other/use_stamp_dialog.dart';
 
 class OtherPage extends StatelessWidget {
   const OtherPage({super.key});
@@ -24,17 +26,41 @@ class OtherPage extends StatelessWidget {
     userBloc.add(UserLogoutEvent());
   }
 
+  bool checkLogin(BuildContext context) {
+    final user = context.read<UserBloc>().state.user;
+    if (user == null) {
+      showSnackBarMessage(context, "로그인이 필요한 서비스 입니다.");
+      return false;
+    }
+    return true;
+  }
+
+  useStamp(BuildContext context) {
+    final isLogin = checkLogin(context);
+    if (!isLogin) {
+      return;
+    }
+    showDialog<bool>(
+      context: context,
+      builder: (builderContext) => const UseStampDialog(),
+    ).then((value) {
+      if (value == null || !value) {
+        return;
+      } else {
+        context.read<UserBloc>().add(UseStampEvent());
+      }
+    });
+  }
+
   navPushName(
     BuildContext context, {
     required String route,
     Object? arguments,
   }) {
-    final user = context.read<UserBloc>().state.user;
-    if (user == null) {
-      showSnackBarMessage(context, "로그인이 필요한 서비스 입니다.");
-      return;
+    final isLogin = checkLogin(context);
+    if (isLogin) {
+      Navigator.pushNamed(context, route, arguments: arguments);
     }
-    Navigator.pushNamed(context, route, arguments: arguments);
   }
 
   @override
@@ -71,6 +97,11 @@ class OtherPage extends StatelessWidget {
                         "쿠폰 사용",
                         "assets/img/ticket.png",
                         () => navPushName(context, route: "/coupon"),
+                      ),
+                      OtherMenuContent(
+                        "스탬프 사용",
+                        "assets/img/stamp_deactive.png",
+                        () => useStamp(context),
                       ),
                     ],
                   ),

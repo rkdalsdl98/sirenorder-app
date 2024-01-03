@@ -87,7 +87,7 @@ class _GiftState extends State<Gift> {
   }
 
   OrderModel createOrder() {
-    final amount = context.read<MenuBloc>().state.detail!.price * menu.count;
+    final amount = menu.price * menu.count;
     final user = context.read<UserBloc>().state.user!;
     final message = (result["message"] == "" || result["message"] == null)
         ? "고마음이 가득 담긴 선물"
@@ -222,7 +222,7 @@ class _GiftState extends State<Gift> {
                       // 메뉴 정보
                       SelectedGift(
                         menuname: menu.name,
-                        price: state.detail?.price,
+                        price: menu.price,
                         thumbnail: menu.thumbnail,
                       ),
                       SizedBox(height: 10 * getScaleHeight(builderContext)),
@@ -251,7 +251,7 @@ class _GiftState extends State<Gift> {
                         width: double.maxFinite,
                         height: 60 * getScaleHeight(builderContext),
                         child: RoundedButtonSmall(
-                          text: "${addComma(state.detail?.price ?? 0)} 원 결제하기",
+                          text: "${addComma(menu.price)} 원 결제하기",
                           fontSize: 14,
                           onTab: payment,
                         ),

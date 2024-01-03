@@ -127,7 +127,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketBlocState> {
   }
 
   handleException(emit, error) {
-    print(error);
     if (error is BlocException) {
       emit(BasketBlocErrorState(state.basket, error));
       return;

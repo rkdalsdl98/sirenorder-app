@@ -3,13 +3,17 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dio/dio.dart';
 import 'package:sirenorder_app/bloc/user/event/register_coupon_event.dart';
 import 'package:sirenorder_app/bloc/user/event/update_gift_event.dart';
+import 'package:sirenorder_app/bloc/user/event/update_user_event.dart';
 import 'package:sirenorder_app/bloc/user/event/use_coupon_event.dart';
+import 'package:sirenorder_app/bloc/user/event/use_stamp_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_login_event.dart';
 import 'package:sirenorder_app/bloc/user/event/user_logout_event.dart';
 import 'package:sirenorder_app/bloc/user/handler/register_coupon_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/handler/update_gift_event_handler.dart';
+import 'package:sirenorder_app/bloc/user/handler/update_user_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/handler/use_coupon_event_handler.dart';
+import 'package:sirenorder_app/bloc/user/handler/use_stamp_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_login_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/handler/user_logout_event_handler.dart';
 import 'package:sirenorder_app/bloc/user/user_bloc_state.dart';
@@ -46,6 +50,42 @@ class UserBloc extends Bloc<UserEvent, UserBlocState> {
       },
       transformer: droppable(),
     );
+    on<UpdateUserEvent>(
+      (event, emit) {
+        updateUser(emit, event);
+      },
+      transformer: sequential(),
+    );
+    on<UseStampEvent>(
+      (event, emit) async {
+        await useStamp(emit, event);
+      },
+      transformer: droppable(),
+    );
+  }
+
+  useStamp(emit, UseStampEvent event) async {
+    try {
+      await UseStampEventHandler().handleEvent(
+        emit,
+        event,
+        state,
+      );
+    } catch (e) {
+      handleException(emit, e);
+    }
+  }
+
+  updateUser(emit, UserEvent event) {
+    try {
+      UpdateUserEventHandler().handleEvent(
+        emit,
+        event,
+        state,
+      );
+    } catch (e) {
+      handleException(emit, e);
+    }
   }
 
   useCoupon(emit, UserEvent event) async {

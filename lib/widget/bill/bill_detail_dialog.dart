@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sirenorder_app/model/order_model.dart';
-import 'package:sirenorder_app/model/user_model.dart';
 import 'package:sirenorder_app/system/dimenssion.dart';
 import 'package:sirenorder_app/system/methods.dart';
 import 'package:sirenorder_app/widget/common/rounded_button_medium.dart';
@@ -9,8 +8,8 @@ import 'package:intl/intl.dart';
 
 class BillDetailDialog extends StatelessWidget {
   final List<DeliveryInfo> deliveryinfos;
-  final List<MenuInfo> menus;
-  final int totalprice;
+  final List<MenuModel> menus;
+  final dynamic totalprice;
   final String storeName;
   final String orderedAt;
   const BillDetailDialog({
@@ -68,7 +67,7 @@ class BillDetailDialog extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Text(
-                "총 합계: ${addComma(totalprice)}원",
+                "총 합계: ${totalprice is String ? totalprice : addComma(totalprice)}원",
                 style: TextStyles.defaultStyle.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -90,7 +89,7 @@ class BillDetailDialog extends StatelessWidget {
   Widget menuInfoWrapper(
     BuildContext context, {
     required DeliveryInfo deliveryinfo,
-    required MenuInfo menuinfo,
+    required MenuModel menuinfo,
   }) {
     final style = TextStyles.defaultStyle.copyWith(
       fontSize: 15,
@@ -121,7 +120,7 @@ class BillDetailDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(360),
                       image: DecorationImage(
                         image: NetworkImage(
-                          menuinfo.thumbnail!,
+                          menuinfo.thumbnail,
                         ),
                         fit: BoxFit.cover,
                       ),
@@ -144,10 +143,6 @@ class BillDetailDialog extends StatelessWidget {
               fontWeight: FontWeight.w500,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          Text(
-            "가격: ${addComma(menuinfo.price ?? 0)}원",
-            style: style,
           ),
           Text(
             "개수: ${menuinfo.count ?? 0}개",
