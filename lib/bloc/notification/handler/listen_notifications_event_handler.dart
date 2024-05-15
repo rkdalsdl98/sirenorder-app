@@ -71,7 +71,6 @@ class ListenNotificationsEventHandler extends NotificationEventHandler {
     NotificationBloc bloc,
   ) async {
     final sseRes = await sse(
-      queryParams: {"listener_email": userEmail},
       headers: {"authorization": "Bearer $token"},
     );
     final stream = sseRes.rs.data?.stream;

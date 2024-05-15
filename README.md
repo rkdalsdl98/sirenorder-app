@@ -43,8 +43,7 @@
 (쿠폰 형식으로 선물함에 기록되며 선물받은 유저에게 알림이 전달됩니다.)  
 
 
-## UI  
-> 작성하던 기존의 Figma가 존재하기는 하나 거의 모든 UI가 스타벅스 앱을 참고하여 작성되었기 때문에 필요하지 않다고 판단하여 스크린샷만 첨부합니다.  
+## UI   
 
 <div align="center">
   <img src="https://github.com/rkdalsdl98/healthyou-app/assets/77562358/936e35b0-4626-401f-807a-03edc35f9d90" width="200" height="355"><img src="https://github.com/rkdalsdl98/healthyou-app/assets/77562358/6d8305ac-84cf-4862-b0e7-a6ebf0fdb3bc" width="200" height="355">  
